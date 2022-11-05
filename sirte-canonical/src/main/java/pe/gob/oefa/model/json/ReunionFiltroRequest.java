@@ -1,0 +1,126 @@
+package pe.gob.oefa.model.json;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
+public class ReunionFiltroRequest implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1169137627762874349L;
+	private String perfil;
+	private String solicitante;
+	private String titulo;
+	private String ubicacionCodigo;
+	private BigDecimal salaId;
+	private Date desde;
+	private Date hasta;
+	private String estadoCodigo;
+
+	public ReunionFiltroRequest() {
+	}
+
+	/**
+	 * @return the solicitante
+	 */
+	public String getSolicitante() {
+		return solicitante;
+	}
+
+	/**
+	 * @param solicitante
+	 *            the solicitante to set
+	 */
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
+	}
+
+	/**
+	 * @return the titulo
+	 */
+	public String getTitulo() {
+		return titulo;
+	}
+
+	/**
+	 * @param titulo
+	 *            the titulo to set
+	 */
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+ 
+
+	public String getUbicacionCodigo() {
+		return ubicacionCodigo;
+	}
+
+	public void setUbicacionCodigo(String ubicacionCodigo) {
+		this.ubicacionCodigo = ubicacionCodigo;
+	}
+
+	public BigDecimal getSalaId() {
+		return salaId;
+	}
+
+	public void setSalaId(BigDecimal salaId) {
+		this.salaId = salaId;
+	}
+
+	public Date getDesde() {
+		return desde;
+	}
+
+	/**
+	 * @param desde
+	 *            the desde to set
+	 */
+	public void setDesde(Date desde) {
+		this.desde = desde;
+	}
+
+	/**
+	 * @return the hasta
+	 */
+	public Date getHasta() {
+		return hasta;
+	}
+
+	/**
+	 * @param hasta
+	 *            the hasta to set
+	 */
+	public void setHasta(Date hasta) {
+		this.hasta = hasta;
+	}
+
+	/**
+	 * @return the estadoCodigo
+	 */
+	public String getEstadoCodigo() {
+		return estadoCodigo;
+	}
+
+	/**
+	 * @param estadoCodigo
+	 *            the estadoCodigo to set
+	 */
+	public void setEstadoCodigo(String estadoCodigo) {
+		this.estadoCodigo = estadoCodigo;
+	}
+
+	public String getPerfil() {
+		return perfil;
+	}
+
+	public void setPerfil(String perfil) {
+		this.perfil = perfil;
+	}
+
+}

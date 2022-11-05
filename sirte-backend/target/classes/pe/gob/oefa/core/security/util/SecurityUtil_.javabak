@@ -1,0 +1,37 @@
+package pe.gob.oefa.core.security.util;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import pe.gob.oefa.core.authentication.session.UserSession;
+
+public class SecurityUtil_ {
+
+	public static final String SECRET = "SecretKeyToGenJWTs";
+	public static final long EXPIRATION_TIME = 864_000_000; // 10 days
+	public static final String TOKEN_PREFIX = "Bearer";
+	public static final String URL_BASE = "/reuniones-backend";
+	public static final String SIGN_UP_URL = "/security/login/sing-up";
+	public static final String VERSION_TABLET_INIT = "/business/tablet/init";
+	public static final String VERSION_TABLET_FIND = "/business/tablet/find";
+	public static final String VERSION_TABLET_SALA_UBICACION = "/comun/combo/loadSalaPorUbicacion/**";
+	
+	//public static final String VERSION_TABLET_TIPO_SALA_UBICACION = "/comun/combo/loadTipoSalaPorUbicacion/**";
+		
+	 
+	private SecurityUtil_() {
+	}
+	
+	public static UserSession getUserSession() {
+		return UserSession.class.cast(SecurityContextHolder.getContext().getAuthentication().getDetails());
+	}
+	
+	
+	public static class Rol{
+		
+		public static String ADMINISTRADOR = "ADMINISTRADOR";
+		public static String TERCERO = "TERCERO";
+		public static String ADMINISTRADO = "ADMINISTRADO";
+		public static String RESPONSABLE_SALA = "RESPONSABLE_SALA";
+	}
+	
+}

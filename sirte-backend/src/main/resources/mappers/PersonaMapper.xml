@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.PersonaDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap type="pe.gob.oefa.sirte.dto.PersonaDTO"
+		id="personaResultMap" extends="auditory">
+		<result column="DOCUMENTO" property="documento" />
+		<result column="PERSONA" property="persona" />
+		<result column="NOMBRES" property="nombres" />
+		<result column="APELLIDOPATERNO" property="apellidoPaterno" />
+		<result column="APELLIDOMATERNO" property="apellidoMaterno" />
+		<result column="ESTADOEMPLEADO" property="estadoempleado" />
+		<result column="CORREOELECTRONICO" property="correoelectronico" />
+		<result column="NOMBREAREA" property="nombreArea" />
+		<result column="IDAREA" property="idArea" />
+	</resultMap>
+
+	<select id="getByCodigoUsuario" resultMap="personaResultMap">
+		select
+		p.PERSONA,
+		p.DOCUMENTO,
+		p.NOMBRES,
+		p.APELLIDOPATERNO,
+		p.APELLIDOMATERNO,
+		e.ESTADOEMPLEADO,
+		a.area as IDAREA
+		from
+		sgcoresys.personamast p
+		join
+		sgcoresys.empleadomast e
+		on p.persona = e. empleado
+		left join
+		sgcoresys.as_area a
+		on a.area = e.dptoareaoperativa
+		where
+		p.persona > 0 and
+		UPPER(e.codigousuario) = UPPER(#{codigousuario})
+	</select>
+
+
+	<select id="getByDocumento" resultMap="personaResultMap">
+		select
+		p.DOCUMENTO,
+		p.NOMBRES,
+		p.APELLIDOPATERNO,
+		p.APELLIDOMATERNO,
+		e.ESTADOEMPLEADO,
+		p.CORREOELECTRONICO
+		from
+		sgcoresys.personamast p
+		join
+		sgcoresys.empleadomast e
+		on p.persona = e. empleado
+		where
+		p.persona > 0 and
+		(p.documento = #{documento} OR
+		UPPER(e.codigousuario) = UPPER(#{documento}))
+	</select>
+
+	<select id="getByParameter" resultMap="personaResultMap">
+		select
+		a.CODIGOUSUARIO as DOCUMENTO,
+		p.NOMBRES,
+		p.APELLIDOPATERNO,
+		p.APELLIDOMATERNO,
+		p.NOMBRECOMPLETO,
+		a.ESTADOEMPLEADO,
+		p.CORREOELECTRONICO,
+		ar.area as IDAREA,
+		ar.nombre as NOMBREAREA
+		from
+		sgcoresys.personamast p
+		join sgcoresys.empleadomast a
+		on p.persona =
+		a.empleado
+		join sgcoresys.as_area ar
+		on ar.area = a.dptoareaoperativa
+		left
+		join SGCORESYS.as_carnetidentificacion b
+		on (a.empleado =
+		b.empleado)
+		WHERE
+		(a.companiasocio in (select Companyowner
+		from
+		SGCORESYS.SeguridadAutorizacionCompania
+		where
+		UPPER(usuario)=UPPER(#{usuarioRed}) or UPPER(usuario) in (select
+		a.perfil
+		from
+		SGCORESYS.SeguridadPerfilUsuario a
+		where UPPER(a.usuario)
+		=
+		UPPER(#{usuarioRed})))
+		or
+		(#{flgAdmin} = 'S' ))
+		AND
+		( ( 'S' =
+		(select
+		max(valortexto)
+		from SGCORESYS.as_seguridad
+		where
+		(UPPER(usuario)=UPPER(#{usuarioRed}) or UPPER(usuario) in (select
+		a.perfil
+		from
+		SGCORESYS.SeguridadPerfilUsuario a
+		where UPPER(a.usuario)
+		=UPPER(#{usuarioRed}))) and
+		(ConceptoSeguridad='ALLTIPOPL') ) )
+		or
+		(a.tipoplanilla in (select valortexto
+		from SGCORESYS.as_seguridad
+		where
+		(UPPER(usuario)=UPPER(#{usuarioRed}) or UPPER(usuario) in (select
+		a.perfil
+		from
+		SGCORESYS.SeguridadPerfilUsuario a
+		where UPPER(a.usuario)
+		=UPPER(#{usuarioRed}))) and
+		( ConceptoSeguridad='TIPOPL')))
+		or
+		(
+		#{flgAdmin} = 'S' ))
+		AND
+		( ( 'S' = (select max(valortexto)
+		from
+		SGCORESYS.as_seguridad
+		where (UPPER(usuario)=UPPER(#{usuarioRed}) or
+		UPPER(usuario)
+		in (select a.perfil
+		from SGCORESYS.SeguridadPerfilUsuario
+		a
+		where
+		UPPER(a.usuario) = UPPER(#{usuarioRed}))) and
+		(ConceptoSeguridad='ALLSUCURS')
+		) )
+		or
+		(a.sucursal in (select valortexto
+		from SGCORESYS.as_seguridad
+		where (UPPER(usuario)=UPPER(#{usuarioRed})
+		or UPPER(usuario) in (select a.perfil
+		from
+		SGCORESYS.SeguridadPerfilUsuario a
+		where UPPER(a.usuario)
+		=UPPER(#{usuarioRed}))) and
+		( ConceptoSeguridad='TIPOSU')))
+		or
+		(
+		#{flgAdmin} = 'S' ))
+		AND
+		( ( 'S' = (select max(valortexto)
+		from
+		SGCORESYS.as_seguridad
+		where (UPPER(usuario)=UPPER(#{usuarioRed}) or
+		UPPER(usuario)
+		in (select a.perfil
+		from SGCORESYS.SeguridadPerfilUsuario
+		a
+		where
+		UPPER(a.usuario) = UPPER(#{usuarioRed}))) and
+		(ConceptoSeguridad='ALLAREA') )
+		)
+		or
+		(b.area in (select valornumero
+		from
+		SGCORESYS.as_seguridad
+		where
+		(UPPER(usuario)=UPPER(#{usuarioRed}) or
+		UPPER(usuario) in (select a.perfil
+		from
+		SGCORESYS.SeguridadPerfilUsuario a
+		where UPPER(a.usuario)
+		=UPPER(#{usuarioRed}))) and
+		( ConceptoSeguridad='TIPOAR')))
+		or
+		( b.area
+		in (select area from SGCORESYS.as_area
+		where
+		empleadoresponsable =
+		#{persona, jdbcType=NUMERIC} OR
+		empleadoresponsable2 =
+		#{persona, jdbcType=NUMERIC} or
+		empleadoresponsable3 =
+		#{persona, jdbcType=NUMERIC}
+		or
+		empleadoresponsable4 = #{persona,jdbcType=NUMERIC}
+		UNION
+		SELECT area
+		FROM
+		SGCORESYS.as_area
+		WHERE areapadre IN (SELECT area
+		FROM sgcoresys.as_area
+		where empleadoresponsable = #{persona,jdbcType=NUMERIC} OR
+		empleadoresponsable2 =
+		#{persona,jdbcType=NUMERIC} or
+		empleadoresponsable3 = #{persona,jdbcType=NUMERIC} or
+		empleadoresponsable4
+		= #{persona,jdbcType=NUMERIC})
+		))
+		or
+		( #{flgAdmin} = 'S' ))
+		and p.persona > 0
+		and p.estado =
+		'A'
+		and a.estadoempleado = 0
+		<if test="documentobusqueda != null and documentobusqueda != ''">
+			and (p.documento = #{documentobusqueda} OR
+			UPPER(a.codigousuario) = UPPER(#{documentobusqueda}))
+		</if>
+		<if test="nombres != null and nombres != ''">
+			and (UPPER(p.nombrecompleto) like '%' || UPPER(#{nombres})
+			|| '%')
+		</if>
+		order by p.NOMBRECOMPLETO
+	</select>
+
+
+</mapper>

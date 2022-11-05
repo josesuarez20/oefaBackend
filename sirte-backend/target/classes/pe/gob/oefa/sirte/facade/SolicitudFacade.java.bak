@@ -1,0 +1,67 @@
+package pe.gob.oefa.srsalas.facade;
+
+import java.math.BigDecimal;
+
+import pe.gob.oefa.model.core.CollectionResponse;
+import pe.gob.oefa.model.core.ResponseBase;
+import pe.gob.oefa.model.json.RecursoSalaDataGridResponse;
+import pe.gob.oefa.model.json.Solicitud2DataGridResponse;
+import pe.gob.oefa.model.json.SolicitudCombosResponse;
+import pe.gob.oefa.model.json.SolicitudDataGridResponse;
+import pe.gob.oefa.model.json.SolicitudFiltroRequest;
+import pe.gob.oefa.model.json.SolicitudRequest;
+import pe.gob.oefa.model.json.SolicitudResponse;
+
+public interface SolicitudFacade {
+
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	CollectionResponse<SolicitudDataGridResponse> find(SolicitudFiltroRequest request);
+	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	CollectionResponse<Solicitud2DataGridResponse> finddos(SolicitudRequest request);
+	
+	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	SolicitudResponse get(BigDecimal id);
+	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	SolicitudResponse saveOrUpdate(SolicitudRequest request);
+	
+	
+	/**
+	 * 
+	 * @param id
+	 */
+	void delete(BigDecimal id);
+
+	SolicitudCombosResponse init();
+
+	SolicitudCombosResponse initForm();
+
+	CollectionResponse<RecursoSalaDataGridResponse> findRecursoBySala(BigDecimal salaId);
+
+	SolicitudResponse getAprobar(BigDecimal solicitudId);
+
+	ResponseBase aprobar(SolicitudRequest request);
+
+	ResponseBase cancelar(SolicitudRequest solicitudRequest);
+
+
+}

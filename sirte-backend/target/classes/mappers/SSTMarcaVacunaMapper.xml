@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.SSTMarcaVacunaDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap id="sstMarcaVacunaResultMap" type="java.util.Map">
+		<result column="NU_ID_MARCA" property="nu_id_marca"
+			jdbcType="NUMERIC" />
+		<result column="TX_NOMBRE" property="tx_nombre"
+			jdbcType="VARCHAR" />
+		<result column="ACTIVO" property="activo" jdbcType="NUMERIC" />
+		<result column="pEsOk" property="pEsOk" jdbcType="NUMERIC" />
+		<result column="pMensaje" property="pMensaje"
+			jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="getByParameter" parameterType="java.util.Map"
+		statementType="CALLABLE" resultType="java.util.Map">
+		{CALL
+		SGCORESYS.PCK_SST.SP_LISTAR_SST_MARCA_VACUNA(
+		#{p_nombre,jdbcType=VARCHAR,mode=IN},
+		#{p_estado,jdbcType=VARCHAR,mode=IN},
+		#{r_sst_marcas,jdbcType=CURSOR,javaType=java.sql.ResultSet,mode=OUT,resultMap=sstMarcaVacunaResultMap})}
+	</select>
+
+	
+</mapper>

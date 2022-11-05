@@ -1,0 +1,150 @@
+package pe.gob.oefa.model.core;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.List;
+
+import pe.gob.oefa.model.json.ParticipanteDataGridResponse;
+
+public class EnvioCorreoParticipanteResponse implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3695704981989689755L;
+	private BigDecimal reunionId;
+	private BigDecimal solicitudId;
+	private String solicitante;
+	private Date fechaReunion;
+	private Timestamp horaInicio;
+	private Timestamp horaFin;
+	private String motivoreunion;
+	private String motivoCancelado;
+	private String correoSolicitante;
+	private String titulo;
+	private String lugar;
+	private String ubicacion;
+	private String area;
+	private List<ParticipanteDataGridResponse> correos;
+
+	public EnvioCorreoParticipanteResponse() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public BigDecimal getReunionId() {
+		return reunionId;
+	}
+
+	public void setReunionId(BigDecimal reunionId) {
+		this.reunionId = reunionId;
+	}
+
+	public BigDecimal getSolicitudId() {
+		return solicitudId;
+	}
+
+	public void setSolicitudId(BigDecimal solicitudId) {
+		this.solicitudId = solicitudId;
+	}
+
+	public String getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(String solicitante) {
+		this.solicitante = solicitante;
+	}
+
+	public Date getFechaReunion() {
+		return fechaReunion;
+	}
+
+	public void setFechaReunion(Date fechaReunion) {
+		this.fechaReunion = fechaReunion;
+	}
+
+	public Timestamp getHoraInicio() {
+		return horaInicio;
+	}
+
+	public void setHoraInicio(Timestamp horaInicio) {
+		this.horaInicio = horaInicio;
+	}
+
+	public Timestamp getHoraFin() {
+		return horaFin;
+	}
+
+	public void setHoraFin(Timestamp horaFin) {
+		this.horaFin = horaFin;
+	}
+
+	public String getMotivoreunion() {
+		return motivoreunion;
+	}
+
+	public void setMotivoreunion(String motivoreunion) {
+		this.motivoreunion = motivoreunion;
+	}
+
+	public String getMotivoCancelado() {
+		return motivoCancelado;
+	}
+
+	public void setMotivoCancelado(String motivoCancelado) {
+		this.motivoCancelado = motivoCancelado;
+	}
+
+	public String getCorreoSolicitante() {
+		return correoSolicitante;
+	}
+
+	public void setCorreoSolicitante(String correoSolicitante) {
+		this.correoSolicitante = correoSolicitante;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public String getLugar() {
+		return lugar;
+	}
+
+	public void setLugar(String lugar) {
+		this.lugar = lugar;
+	}
+
+	public String getUbicacion() {
+		return ubicacion;
+	}
+
+	public void setUbicacion(String ubicacion) {
+		this.ubicacion = ubicacion;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public List<ParticipanteDataGridResponse> getCorreos() {
+		return correos;
+	}
+
+	public void setCorreos(List<ParticipanteDataGridResponse> correos) {
+		this.correos = correos;
+	}
+ 
+ 
+
+}

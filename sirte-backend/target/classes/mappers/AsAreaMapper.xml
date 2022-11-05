@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.AsAreaDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap id="asAreasResultMap" type="java.util.Map">
+		<result column="AREA" property="idarea" jdbcType="NUMERIC" />
+		<result column="AREAPADRE" property="idareapadre"
+			jdbcType="NUMERIC" />
+		<result column="NOMBRE" property="nombre" jdbcType="VARCHAR" />
+		<result column="EMPLEADORESPONSABLE"
+			property="empleadoresponsable" jdbcType="NUMERIC" />
+		<result column="EMPLEADORESPONSABLE2"
+			property="empleadoresponsable2" jdbcType="NUMERIC" />
+		<result column="EMPLEADORESPONSABLE3"
+			property="empleadoresponsable3" jdbcType="NUMERIC" />
+		<result column="EMPLEADORESPONSABLE4"
+			property="empleadoresponsable4" jdbcType="NUMERIC" />
+		<result column="EMPLEADOAPROBADOR" property="empleadoaprobador"
+			jdbcType="NUMERIC" />
+		<result column="EMPLEADOAPROBADOR2"
+			property="empleadoaprobador2" jdbcType="NUMERIC" />
+		<result column="EMPLEADOAPROBADOR3"
+			property="empleadoaprobador3" jdbcType="NUMERIC" />
+		<result column="EMPLEADOAPROBADOR4"
+			property="empleadoaprobador4" jdbcType="NUMERIC" />
+		<result column="FLAGCORREORESPONSABLE1"
+			property="flagcorreoresponsable1" jdbcType="VARCHAR" />
+		<result column="FLAGCORREORESPONSABLE2"
+			property="flagcorreoresponsable2" jdbcType="VARCHAR" />
+		<result column="FLAGCORREORESPONSABLE3"
+			property="flagcorreoresponsable3" jdbcType="VARCHAR" />
+		<result column="FLAGCORREORESPONSABLE4"
+			property="flagcorreoresponsable4" jdbcType="VARCHAR" />
+		<result column="FLAGCORREOAPROBADOR1"
+			property="flagcorreoaprobador1" jdbcType="VARCHAR" />
+		<result column="FLAGCORREOAPROBADOR2"
+			property="flagcorreoaprobador2" jdbcType="VARCHAR" />
+		<result column="FLAGCORREOAPROBADOR3"
+			property="flagcorreoaprobador3" jdbcType="VARCHAR" />
+		<result column="FLAGCORREOAPROBADOR4"
+			property="flagcorreoaprobador4" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<select id="getByParameter" parameterType="java.util.Map"
+		statementType="CALLABLE" resultType="java.util.Map">
+		{CALL
+		SGCORESYS.PCK_SST.SP_LISTAR_AS_AREA(
+		#{p_nombre,jdbcType=VARCHAR,mode=IN},
+		#{p_estado,jdbcType=VARCHAR,mode=IN},
+		#{r_as_areas,jdbcType=CURSOR,javaType=java.sql.ResultSet,mode=OUT,resultMap=asAreasResultMap})}
+
+	</select>
+
+
+</mapper>

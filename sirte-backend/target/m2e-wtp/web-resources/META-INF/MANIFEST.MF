@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Title: vacunas-backend
+Implementation-Version: 1.0.0
+Built-By: DANIEL
+Implementation-Vendor-Id: pe.gob.oefa
+Build-Jdk: 1.8.0_181
+Implementation-URL: http://projects.spring.io/spring-boot/vacunas-back
+ end/
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+Main-Class: pe.gob.oefa.JbossApplication
+

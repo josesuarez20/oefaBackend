@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.DependienteDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap type="pe.gob.oefa.sirte.dto.DependienteDTO"
+		id="dependienteResultMap" extends="auditory">
+		<id column="SECUENCIA" property="secuencia" />
+		<result column="DOCUMENTO" property="documento" />
+		<result column="DOCUMENTO_RESPONSABLE"
+			property="documentoresponsable" />
+		<result column="NOMBRES" property="nombres" />
+		<result column="APELLIDOPATERNO" property="apellidopaterno" />
+		<result column="APELLIDOMATERNO" property="apellidomaterno" />
+		<result column="TIPODEPENDIENTE" property="tipodependiente" />
+		<result column="OTROTIPODEPENDIENTE"
+			property="otrotipodependiente" />
+		<result column="FECHANACIMIENTO" property="fechanacimiento" />
+		<result column="SEXO" property="sexo" />
+		<result column="DIRECCIONCOMPLETA" property="direccioncompleta" />
+		<result column="NACIONALIDAD" property="nacionalidad" />
+		<result column="TIPODEPENDIENTENOMBRE"
+			property="tipodependientenombre" />
+		<result column="CORREOELECTRONICO"
+			property="correoelectronico" />
+		<result column="FECHANACIMIENTONOMBRE"
+			property="fechanacimientonombre" />
+		<result column="ORIGEN" property="origen" />
+		<result column="ESTADO" property="estado" />
+		<result column="ULTIMAFECHAMODIF" property="ultimafechamodif" />
+		<result column="ULTIMOUSUARIO" property="ultimousuario" />
+	</resultMap>
+
+
+	<select id="getByParameterAdicional"
+		resultMap="dependienteResultMap">
+		select
+		A.NOMBRES,
+		A.SECUENCIA,
+		A.DOCUMENTO,
+		A.APELLIDOPATERNO,
+		A.APELLIDOMATERNO,
+		A.DOCUMENTO_RESPONSABLE,
+		A.CORREOELECTRONICO,
+		A.ESTADO
+		from
+		sgcoresys.T_MVC_USUARIO_ADICIONAL A
+		WHERE A.ESTADO = 'A'
+		<if test="documento != null and documento != ''">
+			AND A.DOCUMENTO = #{documento}
+		</if>
+		<if test="documentoresponsable != null and documentoresponsable != ''">
+			AND A.DOCUMENTO_RESPONSABLE = #{documentoresponsable}
+		</if>
+	</select>
+
+
+	<select id="getByParameter" resultMap="dependienteResultMap">
+		SELECT
+		D.SECUENCIA,
+		D.DOCUMENTO,
+		D.DOCUMENTO_RESPONSABLE,
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		nvl(D.OTROTIPODEPENDIENTE,m.descripcionlocal) as
+		"TIPODEPENDIENTENOMBRE",
+		D.OTROTIPODEPENDIENTE,
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as
+		"FECHANACIMIENTONOMBRE",
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'VAC' as "ORIGEN",
+		DC.SECUENCIA as "secuenciacorreo",
+		DC.CORREOS_VACUNA
+		as "correosvacunas"
+		FROM
+		SGCORESYS.T_MVC_VAC_DEPENDIENTE D
+		LEFT JOIN
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		ON DC.DOCUMENTO_RESPONSABLE =
+		D.DOCUMENTO_RESPONSABLE AND
+		DC.DOCUMENTO = D.DOCUMENTO AND DC.TIPO = 'PR'
+		LEFT JOIN
+		sgcoresys.ma_miscelaneosdetalle m
+		ON D.TIPODEPENDIENTE =
+		m.codigoelemento and
+		m.aplicacioncodigo = 'HR' and
+		m.codigotabla =
+		'TIPOVINC' and
+		m.COmpania='999999'
+		WHERE (D.DOCUMENTO_RESPONSABLE =
+		#{documentoresponsable} or D.DOCUMENTO_RESPONSABLE in
+		(select A.DOCUMENTO_RESPONSABLE from sgcoresys.T_MVC_USUARIO_ADICIONAL A
+		WHERE A.DOCUMENTO = #{documentoresponsable}))
+		<if test="documento != null and documento != ''">
+			AND D.DOCUMENTO = #{documento}
+		</if>
+		AND D.ESTADO = 'A'
+		UNION
+		SELECT
+		D.SECUENCIA,
+		D.DOCUMENTOIDENTIDAD as
+		"DOCUMENTO",
+		P.DOCUMENTO as
+		"DOCUMENTO_RESPONSABLE",
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		m.descripcionlocal as "TIPODEPENDIENTENOMBRE",
+		'' as
+		"OTROTIPODEPENDIENTE",
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as
+		"FECHANACIMIENTONOMBRE",
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'SIA' as "ORIGEN",
+		DC.SECUENCIA as "secuenciacorreo",
+		DC.CORREOS_VACUNA
+		as "correosvacunas"
+		FROM
+		SGCORESYS.DEPENDIENTE D
+		JOIN
+		SGCORESYS.PERSONAMAST P
+		ON D.PERSONA =
+		P.PERSONA
+		inner join sgcoresys.empleadomast e
+		on p.persona = e.empleado
+		LEFT JOIN
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		ON DC.DOCUMENTO_RESPONSABLE =
+		P.DOCUMENTO AND
+		DC.DOCUMENTO = D.DOCUMENTOIDENTIDAD AND DC.TIPO = 'PR'
+		LEFT JOIN
+		sgcoresys.ma_miscelaneosdetalle m
+		ON
+		D.TIPODEPENDIENTE =
+		m.codigoelemento and
+		m.aplicacioncodigo = 'HR' and
+		m.codigotabla =
+		'TIPOVINC' and
+		m.COmpania='999999'
+		where (upper(p.documento) = upper(#{documentoresponsable}) or 
+		       upper(e.codigousuario) = upper(#{documentoresponsable}))
+		<if test="documento != null and documento != ''">
+			AND D.DOCUMENTOIDENTIDAD = #{documento}
+		</if>
+	</select>
+	
+	<select id="getByParameterConResponsable" resultMap="dependienteResultMap">
+		SELECT
+		D.SECUENCIA,
+		D.DOCUMENTO,
+		D.DOCUMENTO_RESPONSABLE,
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		nvl(D.OTROTIPODEPENDIENTE,m.descripcionlocal) as
+		"TIPODEPENDIENTENOMBRE",
+		D.OTROTIPODEPENDIENTE,
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as
+		"FECHANACIMIENTONOMBRE",
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'VAC' as "ORIGEN",
+		DC.SECUENCIA as "secuenciacorreo",
+		DC.CORREOS_VACUNA
+		as "correosvacunas"
+		FROM
+		SGCORESYS.T_MVC_VAC_DEPENDIENTE D
+		LEFT JOIN
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		ON upper(DC.DOCUMENTO_RESPONSABLE) =
+		upper(D.DOCUMENTO_RESPONSABLE) AND
+		upper(DC.DOCUMENTO) = upper(D.DOCUMENTO) AND DC.TIPO = 'PR'
+		LEFT JOIN
+		sgcoresys.ma_miscelaneosdetalle m
+		ON D.TIPODEPENDIENTE =
+		m.codigoelemento and
+		m.aplicacioncodigo = 'HR' and
+		m.codigotabla =
+		'TIPOVINC' and
+		m.COmpania='999999'
+		WHERE (upper(D.DOCUMENTO_RESPONSABLE) =
+		upper(#{documentoresponsable}) or upper(D.DOCUMENTO_RESPONSABLE) in
+		(select upper(A.DOCUMENTO_RESPONSABLE) from sgcoresys.T_MVC_USUARIO_ADICIONAL A
+		WHERE upper(A.DOCUMENTO) = upper(#{documentoresponsable})))
+		<if test="documento != null and documento != ''">
+			AND upper(D.DOCUMENTO) = upper(#{documento})
+		</if>
+		AND D.ESTADO = 'A'
+		AND (SELECT TEXTO FROM sgcoresys.parametrosmast WHERE 
+		COMPANIACODIGO='999999' AND APLICACIONCODIGO='HR' AND 
+		PARAMETROCLAVE='FLGVERDEPE') = 'S'
+		UNION
+		SELECT
+		D.SECUENCIA,
+		D.DOCUMENTOIDENTIDAD as
+		"DOCUMENTO",
+		P.DOCUMENTO as
+		"DOCUMENTO_RESPONSABLE",
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		m.descripcionlocal as "TIPODEPENDIENTENOMBRE",
+		'' as
+		"OTROTIPODEPENDIENTE",
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as
+		"FECHANACIMIENTONOMBRE",
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'SIA' as "ORIGEN",
+		DC.SECUENCIA as "secuenciacorreo",
+		DC.CORREOS_VACUNA
+		as "correosvacunas"
+		FROM
+		SGCORESYS.DEPENDIENTE D
+		JOIN
+		SGCORESYS.PERSONAMAST P
+		ON D.PERSONA =
+		P.PERSONA
+		inner join sgcoresys.empleadomast e
+		on p.persona = e.empleado
+		LEFT JOIN
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		ON (upper(DC.DOCUMENTO_RESPONSABLE) =
+		upper(P.DOCUMENTO) or upper(DC.DOCUMENTO_RESPONSABLE) = UPPER(E.CODIGOUSUARIO)) AND
+		upper(DC.DOCUMENTO) = upper(D.DOCUMENTOIDENTIDAD) AND DC.TIPO = 'PR'
+		LEFT JOIN
+		sgcoresys.ma_miscelaneosdetalle m
+		ON
+		D.TIPODEPENDIENTE =
+		m.codigoelemento and
+		m.aplicacioncodigo = 'HR' and
+		m.codigotabla =
+		'TIPOVINC' and
+		m.COmpania='999999'
+		where (upper(p.documento) = upper(#{documentoresponsable}) or 
+		       upper(e.codigousuario) = upper(#{documentoresponsable}))
+		<if test="documento != null and documento != ''">
+			AND D.DOCUMENTOIDENTIDAD = #{documento}
+		</if>
+		AND (SELECT TEXTO FROM sgcoresys.parametrosmast WHERE 
+		COMPANIACODIGO='999999' AND APLICACIONCODIGO='HR' AND 
+		PARAMETROCLAVE='FLGVERDEPE') = 'S'
+		UNION
+		SELECT 
+		0 as SECUENCIA,
+		#{documentoresponsable} as DOCUMENTO,
+		#{documentoresponsable} as DOCUMENTO_RESPONSABLE,
+		#{nombres} as NOMBRES,
+		'' as TIPODEPENDIENTE,
+		'' as "TIPODEPENDIENTENOMBRE",
+		'' as "OTROTIPODEPENDIENTE",
+		sysdate as "FECHANACIMIENTO" ,
+		'' as "FECHANACIMIENTONOMBRE",
+		'' as "SEXO",
+		'' as "DIRECCIONCOMPLETA",
+		'' as "ESTADO",
+		sysdate as "ULTIMAFECHAMODIF",
+		'' as "ULTIMOUSUARIO",
+		'' as "APELLIDOPATERNO",
+		'' as "APELLIDOMATERNO",
+		'' as "NACIONALIDAD",
+		'VAC' as "ORIGEN",
+		(SELECT DC.SECUENCIA FROM 
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		WHERE upper(DC.DOCUMENTO_RESPONSABLE) = upper(#{documentoresponsable}) AND
+		      upper(DC.DOCUMENTO) = upper(#{documentoresponsable}) AND
+		      DC.TIPO = 'PR'
+		      <if test="documento != null and documento != ''">
+			  AND upper(DC.DOCUMENTO) = upper(#{documento})
+			  </if> ) as "secuenciacorreo",
+		(SELECT  DC.CORREOS_VACUNA FROM 
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		WHERE upper(DC.DOCUMENTO_RESPONSABLE) = upper(#{documentoresponsable}) AND
+		      upper(DC.DOCUMENTO) = upper(#{documentoresponsable}) AND
+		      DC.TIPO = 'PR'
+		      <if test="documento != null and documento != ''">
+			  AND upper(DC.DOCUMENTO) = upper(#{documento})
+			  </if> ) as "correosvacunas"
+		FROM
+		DUAL
+		WHERE 1=1
+		<if test="documento != null and documento != ''">
+			  AND upper(#{documentoresponsable}) = upper(#{documento})
+	    </if> 
+	</select>
+	
+	
+	
+	<select id="getByParameterConResponsableAll" resultMap="dependienteResultMap">
+		SELECT
+		D.SECUENCIA,
+		D.DOCUMENTO,
+		D.DOCUMENTO_RESPONSABLE,
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		nvl(D.OTROTIPODEPENDIENTE,m.descripcionlocal) as
+		"TIPODEPENDIENTENOMBRE",
+		D.OTROTIPODEPENDIENTE,
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as
+		"FECHANACIMIENTONOMBRE",
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'VAC' as "ORIGEN",
+		DC.SECUENCIA as "secuenciacorreo",
+		DC.CORREOS_VACUNA
+		as "correosvacunas"
+		FROM
+		SGCORESYS.T_MVC_VAC_DEPENDIENTE D
+		LEFT JOIN
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		ON upper(DC.DOCUMENTO_RESPONSABLE) =
+		upper(D.DOCUMENTO_RESPONSABLE) AND
+		upper(DC.DOCUMENTO) = upper(D.DOCUMENTO) AND DC.TIPO = 'PR'
+		LEFT JOIN
+		sgcoresys.ma_miscelaneosdetalle m
+		ON D.TIPODEPENDIENTE =
+		m.codigoelemento and
+		m.aplicacioncodigo = 'HR' and
+		m.codigotabla =
+		'TIPOVINC' and
+		m.COmpania='999999'
+		WHERE 1=1
+		<if test="documento != null and documento != ''">
+			AND upper(D.DOCUMENTO) = upper(#{documento})
+		</if>
+		<if test="nombres != null and nombres != ''">
+			AND (upper(D.NOMBRES) like '%' || upper(#{nombres}) || '%' or
+			     upper(D.APELLIDOPATERNO) like '%' || upper(#{nombres}) || '%' or
+			     upper(D.APELLIDOMATERNO) like '%' || upper(#{nombres}) || '%' or
+			     upper(D.NOMBRES) || upper(D.APELLIDOPATERNO) || upper(D.APELLIDOMATERNO) like '%' || upper(#{nombres}) || '%' )
+		</if>
+		AND D.ESTADO = 'A'
+		AND (SELECT TEXTO FROM sgcoresys.parametrosmast WHERE 
+		COMPANIACODIGO='999999' AND APLICACIONCODIGO='HR' AND 
+		PARAMETROCLAVE='FLGVERDEPE') = 'S'
+		UNION
+		SELECT
+		D.SECUENCIA,
+		D.DOCUMENTOIDENTIDAD as
+		"DOCUMENTO",
+		P.DOCUMENTO as
+		"DOCUMENTO_RESPONSABLE",
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		m.descripcionlocal as "TIPODEPENDIENTENOMBRE",
+		'' as
+		"OTROTIPODEPENDIENTE",
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as
+		"FECHANACIMIENTONOMBRE",
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'SIA' as "ORIGEN",
+		DC.SECUENCIA as "secuenciacorreo",
+		DC.CORREOS_VACUNA
+		as "correosvacunas"
+		FROM
+		SGCORESYS.DEPENDIENTE D
+		JOIN
+		SGCORESYS.PERSONAMAST P
+		ON D.PERSONA =
+		P.PERSONA
+		inner join sgcoresys.empleadomast e
+		on p.persona = e.empleado
+		LEFT JOIN
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO DC
+		ON (upper(DC.DOCUMENTO_RESPONSABLE) =
+		upper(P.DOCUMENTO) or upper(DC.DOCUMENTO_RESPONSABLE) = UPPER(E.CODIGOUSUARIO)) AND
+		upper(DC.DOCUMENTO) = upper(D.DOCUMENTOIDENTIDAD) AND DC.TIPO = 'PR'
+		LEFT JOIN
+		sgcoresys.ma_miscelaneosdetalle m
+		ON
+		D.TIPODEPENDIENTE =
+		m.codigoelemento and
+		m.aplicacioncodigo = 'HR' and
+		m.codigotabla =
+		'TIPOVINC' and
+		m.COmpania='999999'
+		where 1=1
+		<if test="documento != null and documento != ''">
+			AND D.DOCUMENTOIDENTIDAD = #{documento}
+		</if>
+		<if test="nombres != null and nombres != ''">
+			AND (upper(D.NOMBRES) like '%' || upper(#{nombres}) || '%' or
+			     upper(D.APELLIDOPATERNO) like '%' || upper(#{nombres}) || '%' or
+			     upper(D.APELLIDOMATERNO) like '%' || upper(#{nombres}) || '%' or
+			     upper(D.NOMBRES) || upper(D.APELLIDOPATERNO) || upper(D.APELLIDOMATERNO) like '%' || upper(#{nombres}) || '%' )
+		</if>
+		AND (SELECT TEXTO FROM sgcoresys.parametrosmast WHERE 
+		COMPANIACODIGO='999999' AND APLICACIONCODIGO='HR' AND 
+		PARAMETROCLAVE='FLGVERDEPE') = 'S'
+	</select>
+	
+
+	<select id="get" resultMap="dependienteResultMap"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteDTO">
+		<![CDATA[
+				SELECT
+		D.SECUENCIA,
+		D.DOCUMENTO,
+		D.DOCUMENTO_RESPONSABLE,
+		D.NOMBRES,
+		D.TIPODEPENDIENTE,
+		D.OTROTIPODEPENDIENTE,
+		m.descripcionlocal as "TIPODEPENDIENTENOMBRE",
+		D.FECHANACIMIENTO ,
+		TO_CHAR(D.FECHANACIMIENTO,'dd/MM/yyyy') as "FECHANACIMIENTONOMBRE", 
+		D.SEXO,
+		D.DIRECCIONCOMPLETA,
+		D.ESTADO,
+		D.ULTIMAFECHAMODIF,
+		D.ULTIMOUSUARIO,
+		D.APELLIDOPATERNO,
+		D.APELLIDOMATERNO,
+		D.NACIONALIDAD,
+		'VAC' as "ORIGEN"
+		FROM
+		SGCORESYS.T_MVC_VAC_DEPENDIENTE D
+		LEFT JOIN sgcoresys.ma_miscelaneosdetalle m
+		ON D.TIPODEPENDIENTE = m.codigoelemento and
+		   m.aplicacioncodigo = 'HR' and
+		   m.codigotabla = 'TIPOVINC' and
+		   m.COmpania='999999'
+		WHERE 
+		upper(D.DOCUMENTO_RESPONSABLE) = upper(#{documentoresponsable}) and
+		D.SECUENCIA = #{secuencia}
+		]]>
+	</select>
+
+	<insert id="save"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteDTO">
+		<selectKey order="BEFORE" keyProperty="secuencia"
+			resultType="java.math.BigDecimal">
+			SELECT SGCORESYS.SEQ_DEPENDIENTE.nextVal from dual
+		</selectKey>
+		INSERT INTO SGCORESYS.T_MVC_VAC_DEPENDIENTE( SECUENCIA, DOCUMENTO,
+		DOCUMENTO_RESPONSABLE,
+		NOMBRES, APELLIDOPATERNO, APELLIDOMATERNO,
+		TIPODEPENDIENTE,OTROTIPODEPENDIENTE,
+		FECHANACIMIENTO,SEXO,DIRECCIONCOMPLETA,NACIONALIDAD,ESTADO,ULTIMOUSUARIO,ULTIMAFECHAMODIF)
+		VALUES(
+		#{secuencia,jdbcType=NUMERIC},#{documento,jdbcType=VARCHAR},
+		#{documentoresponsable,jdbcType=VARCHAR}, #{nombres,jdbcType=VARCHAR},
+		#{apellidopaterno,jdbcType=VARCHAR},#{apellidomaterno,jdbcType=VARCHAR},
+		#{tipodependiente,jdbcType=VARCHAR},#{otrotipodependiente,jdbcType=VARCHAR},
+		#{fechanacimiento,jdbcType=DATE},
+		#{sexo,jdbcType=VARCHAR},#{direccioncompleta,jdbcType=VARCHAR},
+		#{nacionalidad,jdbcType=VARCHAR},#{estado,jdbcType=VARCHAR},
+		#{ultimousuario,jdbcType=VARCHAR},sysdate)
+	</insert>
+
+	<update id="update"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteDTO">
+		UPDATE SGCORESYS.T_MVC_VAC_DEPENDIENTE
+		SET
+		TIPODEPENDIENTE
+		=#{tipodependiente,jdbcType=NUMERIC},
+		OTROTIPODEPENDIENTE
+		=#{otrotipodependiente,jdbcType=VARCHAR},
+		FECHANACIMIENTO=#{fechanacimiento,jdbcType=DATE},
+		SEXO=#{sexo,jdbcType=VARCHAR},
+		DIRECCIONCOMPLETA=#{direccioncompleta,jdbcType=VARCHAR},
+		NACIONALIDAD=#{nacionalidad,jdbcType=VARCHAR},
+		ESTADO=#{estado,jdbcType=VARCHAR},
+		ULTIMOUSUARIO=#{ultimousuario,jdbcType=VARCHAR},
+		ULTIMAFECHAMODIF=sysdate
+		WHERE
+		upper(DOCUMENTO_RESPONSABLE) =
+		upper(#{documentoresponsable}) and
+		SECUENCIA
+		=#{secuencia,jdbcType=NUMERIC}
+	</update>
+
+	<delete id="delete"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteDTO">
+		UPDATE SGCORESYS.T_MVC_VAC_DEPENDIENTE
+		SET
+		ULTIMOUSUARIO=#{ultimousuario,jdbcType=VARCHAR},
+		ULTIMAFECHAMODIF=sysdate,
+		ESTADO = 'I'
+		WHERE upper(DOCUMENTO_RESPONSABLE) =
+		upper(#{documentoresponsable}) and
+		SECUENCIA
+		=#{secuencia,jdbcType=NUMERIC}
+	</delete>
+
+
+	<insert id="saveAdicional"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteDTO">
+		<selectKey order="BEFORE" keyProperty="secuencia"
+			resultType="java.math.BigDecimal">
+			SELECT SGCORESYS.SEQ_ADICIONAL.nextVal from dual
+		</selectKey>
+		INSERT INTO SGCORESYS.T_MVC_USUARIO_ADICIONAL( SECUENCIA, DOCUMENTO,
+		DOCUMENTO_RESPONSABLE,
+		NOMBRES, APELLIDOPATERNO, APELLIDOMATERNO,
+		CORREOELECTRONICO,
+		ESTADO,FIRSTUSUARIO,FIRSTFECHA)
+		VALUES(
+		#{secuencia,jdbcType=NUMERIC},#{documento,jdbcType=VARCHAR},
+		#{documentoresponsable,jdbcType=VARCHAR}, #{nombres,jdbcType=VARCHAR},
+		#{apellidopaterno,jdbcType=VARCHAR},
+		#{apellidomaterno,jdbcType=VARCHAR},
+		#{correoelectronico,jdbcType=VARCHAR},
+		#{estado,jdbcType=VARCHAR},
+		#{ultimousuario,jdbcType=VARCHAR},sysdate)
+	</insert>
+
+	<update id="updateAdicional"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteDTO">
+		UPDATE SGCORESYS.T_MVC_VAC_DEPENDIENTE
+		SET
+		TIPODEPENDIENTE
+		=#{tipodependiente,jdbcType=NUMERIC},
+		OTROTIPODEPENDIENTE
+		=#{otrotipodependiente,jdbcType=VARCHAR},
+		FECHANACIMIENTO=#{fechanacimiento,jdbcType=DATE},
+		SEXO=#{sexo,jdbcType=VARCHAR},
+		DIRECCIONCOMPLETA=#{direccioncompleta,jdbcType=VARCHAR},
+		NACIONALIDAD=#{nacionalidad,jdbcType=VARCHAR},
+		ESTADO=#{estado,jdbcType=VARCHAR},
+		ULTIMOUSUARIO=#{ultimousuario,jdbcType=VARCHAR},
+		ULTIMAFECHAMODIF=sysdate
+		WHERE
+		upper(DOCUMENTO_RESPONSABLE) =
+		upper(#{documentoresponsable}) and
+		SECUENCIA
+		=#{secuencia,jdbcType=NUMERIC}
+	</update>
+
+</mapper>

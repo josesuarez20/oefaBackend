@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.DependienteCorreoDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap type="pe.gob.oefa.sirte.dto.DependienteCorreoDTO"
+		id="dependientecorreoResultMap" extends="auditory">
+		<id column="SECUENCIA" property="secuencia" />
+		<result column="DOCUMENTO" property="documento" />
+		<result column="DOCUMENTO_RESPONSABLE"
+			property="documentoresponsable" />
+		<result column="TIPO" property="tipo" />
+		<result column="CORREOS_VACUNA" property="correosvacunas" />
+		<result column="DESCRIPCIONLOCAL" property="descripcionvacuna" />
+		<result column="ESTADO" property="estado" />
+		<result column="ULTIMAFECHAMODIF" property="ultimafechamodif" />
+		<result column="ULTIMOUSUARIO" property="ultimousuario" />
+	</resultMap>
+
+	<select id="getByParameter"
+		resultMap="dependientecorreoResultMap">
+		select
+		P.SECUENCIA,
+		P.DOCUMENTO,
+		P.DOCUMENTO_RESPONSABLE,
+		P.TIPO,
+		P.CORREOS_VACUNA,
+		P.ESTADO
+		from
+		sgcoresys.T_MVC_VAC_DEPENDIENTE_CORREO P
+		where
+		P.DOCUMENTO_RESPONSABLE = #{documentoresponsable}
+		<if test="documento != null and documento != ''">
+			AND P.DOCUMENTO = #{documento}
+		</if>
+		<if test="tipo != null and tipo != ''">
+			AND P.TIPO = #{tipo}
+		</if>
+		AND P.estado = '1'
+	</select>
+
+	<insert id="save"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteCorreoDTO">
+		<selectKey order="BEFORE" keyProperty="secuencia"
+			resultType="java.math.BigDecimal">
+			SELECT SGCORESYS.SEQ_DEPENDIENTE_CORREO.nextVal from dual
+		</selectKey>
+		INSERT INTO SGCORESYS.T_MVC_VAC_DEPENDIENTE_CORREO(
+		SECUENCIA,
+		DOCUMENTO,
+		DOCUMENTO_RESPONSABLE,
+		TIPO,CORREOS_VACUNA,
+		ESTADO,ULTIMOUSUARIO,ULTIMAFECHAMODIF)
+		VALUES(
+		#{secuencia,jdbcType=NUMERIC},#{documento,jdbcType=VARCHAR},
+		#{documentoresponsable,jdbcType=VARCHAR},
+		#{tipo,jdbcType=VARCHAR},
+		#{correosvacunas,jdbcType=VARCHAR},
+		#{estado,jdbcType=VARCHAR},
+		#{ultimousuario,jdbcType=VARCHAR},sysdate)
+	</insert>
+
+	<update id="update"
+		parameterType="pe.gob.oefa.sirte.dto.DependienteCorreoDTO">
+		UPDATE SGCORESYS.T_MVC_VAC_DEPENDIENTE_CORREO
+		SET
+		ULTIMOUSUARIO=#{ultimousuario,jdbcType=VARCHAR},
+		ULTIMAFECHAMODIF=sysdate,
+		CORREOS_VACUNA =
+		#{correosvacunas,jdbcType=VARCHAR}
+		WHERE DOCUMENTO_RESPONSABLE =
+		#{documentoresponsable} and
+		SECUENCIA
+		=#{secuencia,jdbcType=NUMERIC}
+	</update>
+</mapper>

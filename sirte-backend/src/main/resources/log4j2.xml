@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+	<Properties>		
+		<Property name="log-path">${jboss.server.log.dir}</Property>
+		<Property name="PATTERN">[%d{ISO8601}] [%X{userId}][%X{sessionId}] [%-5level] [%logger{36}] [%msg]%n</Property>
+		
+	</Properties>
+	<Appenders>
+		<Console name="log-consola" target="SYSTEM_OUT">
+			<PatternLayout pattern="${PATTERN}" />
+		</Console>
+		<RollingFile name="log-app" 
+fileName="${log-path}/vacunas_backend_log.01.log" filePattern="${log-path}/vacunas_backend_restapp_%d{yyyy-MM-dd}.01.log"
+>
+			<PatternLayout pattern="${PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="log-error" 
+fileName="${log-path}/vacunas_backend_error.01.log" filePattern="${log-path}/vacunas_backend_resterror_%d{yyyy-MM-dd}.01.log"
+>
+			<PatternLayout pattern="${PATTERN}" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<root level="info" additivity="false">
+			<appender-ref ref="log-app" level="info" />
+		</root>
+		<root level="error" additivity="false">
+			<appender-ref ref="log-error" level="error" />
+		</root>
+		<root level="debug" additivity="false">
+			<appender-ref ref="log-app" level="debug" />
+		</root>
+		<logger name="pe.gob.oefa" level="debug" additivity="true">
+			<appender-ref ref="log-consola" level="debug" />
+		</logger>
+		<logger name="pe.gob.oefa" level="info" additivity="true">
+			<appender-ref ref="log-consola" level="info" />
+		</logger>
+		<logger name="pe.gob.oefa" level="error" additivity="true">
+			<appender-ref ref="log-consola" level="error" />
+		</logger>
+		
+ 
+	</Loggers>
+</Configuration>

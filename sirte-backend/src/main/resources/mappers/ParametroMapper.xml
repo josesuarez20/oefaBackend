@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.ParametroDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap type="pe.gob.oefa.dto.core.ParametroDTO"
+		id="parametroResultMap" extends="auditory">
+		<result column="COMPANIACODIGO" property="companiacodigo" />
+		<result column="APLICACIONCODIGO" property="aplicacioncodigo" />
+		<result column="PARAMETROCLAVE" property="parametroclave" />
+		<result column="DESCRIPCIONPARAMETRO"
+			property="descripcionparametro" />
+		<result column="EXPLICACION" property="explicacion" />
+		<result column="TIPODEDATOFLAG" property="tipodedatoflag" />
+		<result column="NUMERO" property="numero" />
+		<result column="ESTADO" property="estado" />
+		<result column="ULTIMOUSUARIO" property="ultimousuario" />
+		<result column="ULTIMAFECHAMODIF" property="ultimafechamodif" />
+	</resultMap>
+
+	<select id="obtener" resultMap="parametroResultMap">
+		select
+		COMPANIACODIGO,
+		APLICACIONCODIGO,
+		PARAMETROCLAVE,
+		descripcionparametro,
+		explicacion,
+		TIPODEDATOFLAG,
+		NUMERO,
+		ESTADO,
+		ULTIMOUSUARIO,
+		ULTIMAFECHAMODIF
+		from
+		sgcoresys.parametrosmast
+		where
+		COMPANIACODIGO = #{companiacodigo} and
+		APLICACIONCODIGO = #{aplicacioncodigo} and
+		PARAMETROCLAVE =
+		#{parametroclave}
+	</select>
+
+</mapper>

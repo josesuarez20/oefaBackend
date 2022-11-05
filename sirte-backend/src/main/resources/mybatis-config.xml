@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+	<typeAliases>
+		<package name="pe.gob.oefa" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="mappers/DependienteMapper.xml" />
+		<mapper resource="mappers/PersonaMapper.xml" />
+		<mapper resource="mappers/ComboMapper.xml" />
+		<mapper resource="mappers/ProgramacionMapper.xml" />
+		<mapper resource="mappers/ProgramacionDetMapper.xml" />
+		<mapper resource="mappers/ParametroMapper.xml" />
+		<mapper resource="mappers/DependienteCorreoMapper.xml" />
+		<mapper resource="mappers/PruebaDescarteMapper.xml" />
+		<mapper resource="mappers/SSTMarcaVacunaMapper.xml" />
+		<mapper resource="mappers/SigaTerceroLocadorMapper.xml" />
+		<mapper resource="mappers/SSTReporteVacunasMapper.xml" />
+		<mapper resource="mappers/AsAreaMapper.xml" />
+	</mappers>
+
+</configuration>

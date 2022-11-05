@@ -1,0 +1,103 @@
+package pe.gob.oefa.core.context;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Properties;
+
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+
+import org.apache.velocity.app.VelocityEngine;
+import org.apache.velocity.exception.VelocityException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.ui.velocity.VelocityEngineFactory;
+
+import com.sun.mail.util.MailSSLSocketFactory;
+
+@SuppressWarnings("deprecation")
+@Configuration
+@ComponentScan(basePackages = "pe.gob.oefa")
+public class AppMailConfig {
+
+	@Value("${mail.smtp.host}")
+	private String emailHost;
+	
+	@Value("${mail.smtp.port}")
+	private Integer emailPort;
+	
+	@Value("${mail.username}")
+	private String emailUsername;
+	
+	@Value("${mail.password}")
+	private String emailPassword;
+	
+	@Value("${email.protocolo}")
+	private String protocol;
+	
+	@Value("${mail.smtp.starttls.enable}")
+	private String starttlsEnable;
+	
+	@Value("${mail.smtp.auth}")
+	private String smtpAuth;
+	
+	@Value("${mail.smtp.socketFactory.port}")
+	private String smtpSocketFactoryPort;
+	
+	@Value("${mail.smtp.socketFactory.class}")
+	private String smtpSocketFactoryclass;
+	
+	@Value("${mail.smtp.ssl.trust}")
+	private String smtpSSLTrust;
+	
+//	@Value("${correo.transport.protocol}")
+//	private String transportProtocol;
+	
+//	@Value("${correo.debug}")
+//	private String debug;
+	
+	@Bean
+    public JavaMailSender getMailSender() throws GeneralSecurityException {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(emailHost);
+        mailSender.setPort(emailPort);
+        mailSender.setUsername(emailUsername);
+        mailSender.setPassword(emailPassword);
+        mailSender.setProtocol(protocol);
+        
+        Properties javaMailProperties = new Properties();
+        javaMailProperties.put("mail.smtp.host", emailHost);	    
+        javaMailProperties.put("mail.smtp.starttls.enable",starttlsEnable);
+        javaMailProperties.put("mail.smtp.auth", smtpAuth);
+        javaMailProperties.put("mail.smtp.socketFactory.port", smtpSocketFactoryPort);
+        javaMailProperties.put("mail.smtp.socketFactory.class",smtpSocketFactoryclass);
+	    javaMailProperties.put("mail.smtp.port", emailPort);
+	    MailSSLSocketFactory sf = new MailSSLSocketFactory();
+	    sf.setTrustAllHosts(true); 
+	    javaMailProperties.put("mail.smtp.ssl.trust", smtpSSLTrust);
+	    javaMailProperties.put("mail.smtp.ssl.socketFactory", sf);
+        Session session = Session.getInstance(javaMailProperties, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+            	return new PasswordAuthentication(emailUsername,emailPassword);
+            }
+        });
+        mailSender.setSession(session);
+        mailSender.setJavaMailProperties(javaMailProperties);
+        return mailSender;
+    }
+ 
+    @Bean
+    public VelocityEngine getVelocityEngine() throws VelocityException, IOException {
+        VelocityEngineFactory velocityEngineFactory = new VelocityEngineFactory();
+        Properties props = new Properties();
+        props.put("resource.loader", "class");
+        props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+ 
+        velocityEngineFactory.setVelocityProperties(props);
+        return velocityEngineFactory.createVelocityEngine();
+    }
+}

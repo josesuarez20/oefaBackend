@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.ComboDAO">
+
+	<resultMap type="BaseDTO" id="auditory">
+		<result column="FLG_FIRST_USUARIO" property="creado" />
+		<result column="FLG_LAST_USUARIO" property="modificado" />
+		<result column="FLG_DEL_USUARIO" property="eliminado" />
+		<result column="FLG_FIRST_FECHA" property="creadoPor" />
+		<result column="FLG_LAST_FECHA" property="modificadoPor" />
+		<result column="FLG_DEL_FECHA" property="eliminadoPor" />
+		<result column="HABILITADO" property="habilitado" />
+	</resultMap>
+
+	<resultMap type="pe.gob.oefa.dto.core.ComboDTO"
+		id="comboResultMap" extends="auditory">
+		<result column="CODIGO" property="codigo" />
+		<result column="NOMBRE" property="nombre" />
+		<result column="VALORCODIGO1" property="valorcodigo1" />
+		<result column="VALORCODIGO2" property="valorcodigo2" />
+	</resultMap>
+
+	<select id="listarTipoVinculo" resultMap="comboResultMap">
+		select
+		codigoelemento as "CODIGO",
+		descripcionlocal as "NOMBRE"
+		from
+		sgcoresys.ma_miscelaneosdetalle
+		where
+		aplicacioncodigo = 'HR' and
+		compania = '999999' and
+		codigotabla =
+		'TIPOVINC' and
+		VALORCODIGO1 = 'S'
+	</select>
+	
+	<select id="listarVacuna" resultMap="comboResultMap">
+		select
+		codigoelemento as "CODIGO",
+		descripcionlocal as "NOMBRE",
+		valorcodigo1 as "VALORCODIGO1",
+		valorcodigo2 as "VALORCODIGO2"
+		from
+		sgcoresys.ma_miscelaneosdetalle
+		where
+		aplicacioncodigo = 'HR' and
+		compania = '999999' and
+		codigotabla = 'VACUNAS' and
+		valorcodigo3 = 'S'
+		<if test="codigoelemento != null and codigoelemento != ''">
+			AND codigoelemento = #{codigoelemento}
+		</if>
+		order by descripcionlocal
+	</select>
+
+</mapper>
