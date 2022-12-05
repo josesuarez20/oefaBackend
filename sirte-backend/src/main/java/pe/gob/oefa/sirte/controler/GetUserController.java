@@ -23,13 +23,18 @@ public class GetUserController {
 	private UserDAO userDAO;
 
 	@CrossOrigin("*")
+	@GetMapping("/get/")
+	public List<UserDTO> getAllUser() throws Exception {
+		List<UserDTO> ListuserDTO = userDAO.listarUsuarios();
+		return ListuserDTO;
+	}
+	@CrossOrigin("*")
 	@GetMapping("/get/{dni}")
-	public List<UserDTO> getUsetByDni(@PathVariable String dni) throws Exception {
+	public List<UserDTO> getUserByDni(@PathVariable String dni) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("dni", dni);
 		
-		List<UserDTO> ListuserDTO = userDAO.listarUsuarios(map);
-		System.out.println("HOLAMUNDO:::");
+		List<UserDTO> ListuserDTO = userDAO.listarUsuariosByDni(map);
 		return ListuserDTO;
 	}
 }

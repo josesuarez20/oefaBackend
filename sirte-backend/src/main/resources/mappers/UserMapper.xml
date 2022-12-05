@@ -6,15 +6,44 @@
 		<result column="CODIGOUSUARIO" property="codigousuario" />
 		<result column="DOCUMENTO" property="documento" />
 		<result column="NOMBRECOMPLETO" property="nombrecompleto" />
+		<result column="CODIGOPUESTO" property="codigopuesto" />
+		<result column="DESCRIPCION" property="descripcion" />
+		<result column="NOMBRE" property="nombre" />
+		<result column="AREA" property="area" />
 	</resultMap>
+	
+	<select id="listarUsuariosByDni" resultMap="userResultMap">
+		select e.codigousuario,
+		p.documento,
+		p.nombrecompleto,
+		h.codigopuesto,
+		h.descripcion,
+		a.nombre,
+		a.area
+		from sgcoresys.empleadomast e
+		join sgcoresys.personamast p
+		on e.empleado = p.persona
+		join sgcoresys.hr_puestoempresa h
+		on e.empleado = h.codigopuesto
+		join sgcoresys.as_area a
+		on e.dptoareaoperativa = a.area
+		where p.documento = #{dni}
+	</select>
 	
 	<select id="listarUsuarios" resultMap="userResultMap">
 		select e.codigousuario,
 		p.documento,
-		p.nombrecompleto
+		p.nombrecompleto,
+		h.codigopuesto,
+		h.descripcion,
+		a.nombre
 		from sgcoresys.empleadomast e
 		join sgcoresys.personamast p
 		on e.empleado = p.persona
-		where p.documento = #{dni}
+		join sgcoresys.hr_puestoempresa h
+		on e.empleado = h.codigopuesto
+		join sgcoresys.as_area a
+		on e.dptoareaoperativa = a.area
 	</select>
+	
 </mapper>

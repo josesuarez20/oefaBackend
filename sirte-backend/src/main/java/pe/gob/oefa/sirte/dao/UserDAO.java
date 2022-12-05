@@ -6,5 +6,6 @@ import java.util.Map;
 import pe.gob.oefa.dto.core.UserDTO;
 
 public interface UserDAO {
-	List<UserDTO> listarUsuarios(Map<String, Object> map) throws Exception;
+	List<UserDTO> listarUsuarios() throws Exception;
+	List<UserDTO> listarUsuariosByDni(Map<String, Object> map) throws Exception;
 }
