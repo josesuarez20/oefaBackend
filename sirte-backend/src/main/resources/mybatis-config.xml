@@ -13,6 +13,7 @@
 		<mapper resource="mappers/DependienteMapper.xml" />
 		<mapper resource="mappers/PersonaMapper.xml" />
 		<mapper resource="mappers/ComboMapper.xml" />
+		<mapper resource="mappers/UserMapper.xml" />
 		<mapper resource="mappers/ProgramacionMapper.xml" />
 		<mapper resource="mappers/ProgramacionDetMapper.xml" />
 		<mapper resource="mappers/ParametroMapper.xml" />

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.UserDAO">
+
+	<resultMap type="pe.gob.oefa.dto.core.UserDTO" id="userResultMap">
+		<result column="CODIGOUSUARIO" property="codigousuario" />
+		<result column="DOCUMENTO" property="documento" />
+		<result column="NOMBRECOMPLETO" property="nombrecompleto" />
+	</resultMap>
+	
+	<select id="listarUsuarios" resultMap="userResultMap">
+		select e.codigousuario,
+		p.documento,
+		p.nombrecompleto
+		from sgcoresys.empleadomast e
+		join sgcoresys.personamast p
+		on e.empleado = p.persona
+		where p.documento = #{dni}
+	</select>
+</mapper>
