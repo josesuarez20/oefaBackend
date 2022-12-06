@@ -7,7 +7,7 @@ public class UserDTO implements Serializable {
 	private String nombrecompleto;
 	private String codigopuesto;
 	private String descripcion;
-	private long nombre;
+	private String nombre;
 	private String area;
 	public String getArea() {
 		return area;
@@ -28,10 +28,11 @@ public class UserDTO implements Serializable {
 		this.documento = documento;
 	}
 	
-	public long getNombre() {
+	
+	public String getNombre() {
 		return nombre;
 	}
-	public void setNombre(long nombre) {
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 	public String getNombrecompleto() {
