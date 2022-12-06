@@ -13,13 +13,8 @@
 	</resultMap>
 	
 	<select id="listarUsuariosByDni" resultMap="userResultMap">
-		select e.codigousuario,
-		p.documento,
-		p.nombrecompleto,
-		h.codigopuesto,
-		h.descripcion,
-		a.nombre,
-		a.area
+		select
+		e.codigousuario, p.documento, p.nombrecompleto, h.codigopuesto, h.descripcion, a.nombre, a.area
 		from sgcoresys.empleadomast e
 		join sgcoresys.personamast p
 		on e.empleado = p.persona
