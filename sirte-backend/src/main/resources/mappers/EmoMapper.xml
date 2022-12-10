@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.EmoDAO">
+	<resultMap
+		type="pe.gob.oefa.sirte.dto.EmoDTOResponse"
+		id="emoResultMap">
+		<id column="ID" property="id" />
+		<result column="DNI" property="dni" />
+		<result column="FECHA_REGISTRO_EXAMEN" property="fechaRegistro" />
+		<result column="SEDE" property="sede" />
+		<result column="APTITUD_MEDICO" property="aptitudMedico" />
+		<result column="TIPO_EMO" property="tipoEmo" />
+		<result column="ANEXO" property="anexo" />
+		<result column="INTERCONSULTA" property="interconsulta" />
+		<result column="RECOMENDACIONES" property="recomendaciones" />
+		<result column="RESTRICCIONES" property="restricciones" />
+		<result column="FECHA_CREACION" property="fechaCreacion" />
+		<result column="USUARIO_CREACION" property="usuarioCreacion" />
+	</resultMap>
+	
+	<resultMap
+		type="pe.gob.oefa.sirte.dto.BDTablesDTO"
+		id="tablesResultMap">
+		<result column="TABLE_NAME" property="tableName" />
+		
+	</resultMap>
+	<resultMap
+		type="pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse"
+		id="emoConsultaResultMap">
+		<id column="ID" property="id" />
+		<result column="CODIGO_EXAMEN" property="codigoExamen" />
+		<result column="NOMBRE_EXAMEN" property="nombreExamen" />
+		<result column="NOMBRE_ARCHIVO" property="nombreArchivo" />
+		<result column="PATH_ARCHIVO" property="pathExamen" />
+		<result column="APTITUD_MEDICO" property="aptitudMedico" />
+		<result column="HABILITADO" property="habilitado" />
+		<result column="FECHA_CREACION" property="fechaCreacion" />
+		<result column="USUARIO_CREACION" property="usuarioCreacion" />
+		<result column="ID_EMO_CONSULTA" property="idEmoConsulta" />
+	
+	</resultMap>
+	<select id="getAllEmo" resultMap="emoResultMap">
+		select p.*  from sgcoresys.EMO_CONSULTA p
+	</select>
+	
+	<select id="getAllTables" resultMap="tablesResultMap">
+		select table_name from user_tables order by table_name
+
+	</select>
+	<select id="getAllEmoExamenes" resultMap="emoConsultaResultMap">
+		select * from sgcoresys.EMO_CONSULTA e			
+		where e.ID_EMO_CONSULTA = #{idEmoConsulta}
+	</select>
+	<insert id="saveEmo"
+	useGeneratedKeys="true"
+		parameterType="pe.gob.oefa.sirte.dto.EmoDTORequest">
+		<selectKey order="BEFORE" keyProperty="id"
+			resultType="java.lang.Integer">
+			SELECT SGCORESYS.SEQ_EMO.nextVal from dual
+		</selectKey>
+		INSERT INTO SGCORESYS.EMO_CONSULTA(
+		ID, 
+		DNI,
+		FECHA_REGISTRO_EXAMEN,
+		SEDE,
+		APTITUD_MEDICO,
+		TIPO_EMO,
+		ANEXO,
+		INTERCONSULTA ,
+		RECOMENDACIONES,
+		RESTRICCIONES,
+		USUARIO_CREACION,
+		FECHA_CREACION)
+		VALUES(
+		#{id,jdbcType=NUMERIC},
+		#{dni,jdbcType=VARCHAR},
+		#{fechaRegistro,jdbcType=DATE},
+		#{sede,jdbcType=VARCHAR},
+		#{aptitudMedico,jdbcType=NUMERIC},
+		#{tipoEmo,jdbcType=NUMERIC},
+		#{anexo,jdbcType=NUMERIC},
+		#{interconsulta,jdbcType=NUMERIC},
+		#{recomendaciones,jdbcType=VARCHAR},
+		#{restricciones,jdbcType=VARCHAR},
+		#{usuarioCreacion,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP)
+	</insert>
+
+	<update id="updateEmo"
+		parameterType="pe.gob.oefa.sirte.dto.EmoDTORequest">
+		UPDATE SGCORESYS. SGCORESYS.EMO_CONSULTA
+		SET
+		FECHA_REGISTRO_EXAMEN=#{fechaRegistro,jdbcType=DATE},
+		SEDE=#{sede,jdbcType=VARCHAR},
+		APTITUD_MEDICO=#{aptitudMedico,jdbcType=NUMERIC},
+		TIPO_EMO=#{tipoEmo,jdbcType=NUMERIC},
+		ANEXO=#{anexo,jdbcType=NUMERIC},
+		INTERCONSULTA=#{interconsulta,jdbcType=NUMERIC},
+		RECOMENDACIONES=#{recomendaciones,jdbcType=VARCHAR},
+		RESTRICCIONES=#{restricciones,jdbcType=VARCHAR},
+		 and
+		ID
+		=#{id,jdbcType=NUMERIC}
+	</update>
+
+	</mapper>
