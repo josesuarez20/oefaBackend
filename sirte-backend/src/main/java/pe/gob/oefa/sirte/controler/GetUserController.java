@@ -39,5 +39,11 @@ public class GetUserController {
 		return ListuserDTO;
 	}
 	
-	
+	@CrossOrigin("*")
+	@GetMapping("/search")
+	public void getUserbyNameAndArea(@RequestParam String name, @RequestParam String area ) throws Exception {
+		System.out.println(":::"+name+":::");
+		System.out.println("=="+area+"==");
+		return;
+	}
 }

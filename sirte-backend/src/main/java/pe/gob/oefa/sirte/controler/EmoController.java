@@ -21,6 +21,7 @@ import pe.gob.oefa.sirte.dao.UserDAO;
 import pe.gob.oefa.sirte.dto.BDTablesDTO;
 import pe.gob.oefa.sirte.dto.EmoDTORequest;
 import pe.gob.oefa.sirte.dto.EmoDTOResponse;
+import pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse;
 import pe.gob.oefa.sirte.dto.ResponseGenericDTO;
 
 @RestController
@@ -82,5 +83,20 @@ public class EmoController {
 		return response;
 		
 	}
+
+	@CrossOrigin("*")
+	@GetMapping("/consulta/{dni}")
+	public List<EmoDocumentDTOResponse> getEmoDni(@PathVariable String dni)
+	throws Exception {
 		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("dni", dni);
+		String id = emoDAO.emoConsultaByDni(map).get(0).getId().toString();
+		
+		Map<String, Object> map_ = new HashMap<>();
+		map_.put("id", id);
+		List<EmoDocumentDTOResponse> emoExamenes = emoDAO.EmoExamenesById(map_);
+		return emoExamenes;
+	}
 }

@@ -39,6 +39,7 @@
 		<result column="ID_EMO_CONSULTA" property="idEmoConsulta" />
 	
 	</resultMap>
+	
 	<select id="getAllEmo" resultMap="emoResultMap">
 		select p.*  from sgcoresys.EMO_CONSULTA p
 	</select>
@@ -102,5 +103,14 @@
 		ID
 		=#{id,jdbcType=NUMERIC}
 	</update>
+	
+	<select id="emoConsultaByDni" resultMap="emoResultMap">
+		SELECT * FROM EMO_CONSULTA WHERE dni=#{dni}
+	</select>
+	
+	<select id="EmoExamenesById" resultMap="emoConsultaResultMap">
+		SELECT * FROM EMO_CONSULTA_EXAMENES WHERE id=#{id}
+	</select>
+	
 
 	</mapper>
