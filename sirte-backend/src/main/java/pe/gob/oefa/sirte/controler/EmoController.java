@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import pe.gob.oefa.sirte.dto.BDTablesDTO;
 import pe.gob.oefa.sirte.dto.EmoDTORequest;
 import pe.gob.oefa.sirte.dto.EmoDTOResponse;
 import pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse;
+import pe.gob.oefa.sirte.dto.EmoMatrizDTORequest;
+import pe.gob.oefa.sirte.dto.EmoMatrizDTOResponse;
 import pe.gob.oefa.sirte.dto.ResponseGenericDTO;
 
 @RestController
@@ -53,7 +56,7 @@ public class EmoController {
 	public ResponseGenericDTO registrar(@RequestBody EmoDTORequest emoDTORequest) throws Exception {
 		ResponseGenericDTO response = new ResponseGenericDTO();
 		try {
-			response.setSuccess(emoDAO.updateEmo(emoDTORequest) == 1 ? true : false);
+			response.setSuccess(emoDAO.saveEmo(emoDTORequest) == 1 ? true : false);
 			response.setCode(201);
 			response.setMessage(MESSAGE_CREATE);
 			
@@ -99,4 +102,35 @@ public class EmoController {
 		List<EmoDocumentDTOResponse> emoExamenes = emoDAO.EmoExamenesById(map_);
 		return emoExamenes;
 	}
+	/**
+	 * 
+	 * */
+	@CrossOrigin("*")
+	@GetMapping("/matriz")
+	public List<EmoMatrizDTOResponse> getAllMatriz() throws Exception {
+		return emoDAO.getAllEmoMatriz();
+	}
+	
+	@Transactional
+	@CrossOrigin("*")
+	@PostMapping("/matriz")
+	public ResponseGenericDTO registrarMatriz(@RequestBody List<EmoMatrizDTORequest> requestList) throws Exception {
+		ResponseGenericDTO response = new ResponseGenericDTO();
+		try {
+			for (int i = 0; i < requestList.size(); i++) {
+				emoDAO.saveEmoMatriz(requestList.get(i));
+			}
+			response.setSuccess(true);
+			response.setCode(201);
+			response.setMessage(MESSAGE_CREATE);
+			
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setCode(500);
+			response.setMessage(e.getMessage());
+		}
+		return response;
+		
+	}
+	 
 }

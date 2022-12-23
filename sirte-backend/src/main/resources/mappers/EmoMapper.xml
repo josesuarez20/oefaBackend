@@ -25,6 +25,14 @@
 		
 	</resultMap>
 	<resultMap
+		type="pe.gob.oefa.sirte.dto.EmoMatrizDTOResponse"
+		id="emoMatrizResultMap">
+				<id column="ID" property="id" />
+
+		<result column="DATA_REGISTRO" property="data" />
+		
+	</resultMap>
+	<resultMap
 		type="pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse"
 		id="emoConsultaResultMap">
 		<id column="ID" property="id" />
@@ -111,6 +119,24 @@
 	<select id="EmoExamenesById" resultMap="emoConsultaResultMap">
 		SELECT * FROM EMO_CONSULTA_EXAMENES WHERE id=#{id}
 	</select>
+		<insert id="saveEmoMatriz"
+		useGeneratedKeys="true"
+		parameterType="pe.gob.oefa.sirte.dto.EmoMatrizDTORequest">
+		<selectKey order="BEFORE" keyProperty="id"
+			resultType="java.lang.Integer">
+			SELECT SGCORESYS.SEQ_EMO_MATRIZ.nextVal from dual
+		</selectKey>
+		INSERT INTO SGCORESYS.EMO_MATRIZ(
+		ID, 
+		DATA_REGISTRO
+		)
+		VALUES(
+		#{id,jdbcType=NUMERIC},
+		#{data,jdbcType=CLOB}
+		)
+	</insert>
 	
-
+	<select id="getAllEmoMatriz" resultMap="emoMatrizResultMap">
+				select p.*  from sgcoresys.EMO_MATRIZ p
+</select>
 	</mapper>
