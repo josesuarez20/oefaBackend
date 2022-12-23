@@ -1,8 +1,8 @@
 package pe.gob.oefa.sirte.dto;
 
 public class EmoMatrizDTORequest {
-	private Integer id;
 	private String data;
+	private Integer id;
 	
 	public Integer getId() {
 		return id;
