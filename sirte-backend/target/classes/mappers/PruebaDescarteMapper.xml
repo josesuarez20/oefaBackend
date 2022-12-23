@@ -132,7 +132,7 @@
 		#{vigenciahasta,jdbcType=DATE},
 		#{uuid,jdbcType=VARCHAR},
 		#{estado,jdbcType=VARCHAR},
-		#{ultimousuario,jdbcType=VARCHAR},sysdate)
+		#{ultimousuario,jdbcType=VARCHAR},SYSTIMESTAMP )
 	</insert>
 
 	<update id="update"

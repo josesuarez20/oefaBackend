@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="pe.gob.oefa.sirte.dao.UserDAO">
+
+	<resultMap type="pe.gob.oefa.dto.core.UserDTO" id="userResultMap">
+		<result column="CODIGOUSUARIO" property="codigousuario" />
+		<result column="DOCUMENTO" property="documento" />
+		<result column="NOMBRECOMPLETO" property="nombrecompleto" />
+		<result column="CODIGOPUESTO" property="codigopuesto" />
+		<result column="DESCRIPCION" property="descripcion" />
+		<result column="NOMBRE" property="nombre" />
+		<result column="AREA" property="area" />
+	</resultMap>
+	
+	<select id="listarUsuariosByDni" resultMap="userResultMap">
+		select
+		e.codigousuario, p.documento, p.nombrecompleto, h.codigopuesto, h.descripcion, a.nombre, a.area
+		from sgcoresys.empleadomast e
+		join sgcoresys.personamast p
+		on e.empleado = p.persona
+		join sgcoresys.hr_puestoempresa h
+		on e.empleado = h.codigopuesto
+		join sgcoresys.as_area a
+		on e.dptoareaoperativa = a.area
+		where p.documento = #{dni}
+	</select>
+	
+	<select id="listarUsuarios" resultMap="userResultMap">
+		select e.codigousuario,
+		p.documento,
+		p.nombrecompleto,
+		h.codigopuesto,
+		h.descripcion,
+		a.nombre
+		from sgcoresys.empleadomast e
+		join sgcoresys.personamast p
+		on e.empleado = p.persona
+		join sgcoresys.hr_puestoempresa h
+		on e.empleado = h.codigopuesto
+		join sgcoresys.as_area a
+		on e.dptoareaoperativa = a.area
+	</select>
+	
+</mapper>
