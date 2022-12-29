@@ -14,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import pe.gob.oefa.dto.core.UserDTO;
+import pe.gob.oefa.model.json.ReporteResponse;
 import pe.gob.oefa.sirte.dao.EmoDAO;
 import pe.gob.oefa.sirte.dao.UserDAO;
 import pe.gob.oefa.sirte.dto.BDTablesDTO;
@@ -26,6 +29,8 @@ import pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse;
 import pe.gob.oefa.sirte.dto.EmoMatrizDTORequest;
 import pe.gob.oefa.sirte.dto.EmoMatrizDTOResponse;
 import pe.gob.oefa.sirte.dto.ResponseGenericDTO;
+import pe.gob.oefa.sirte.facade.DocumentoEmoFacade;
+import pe.gob.oefa.sirte.facade.DocumentoFacade;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -37,7 +42,16 @@ public class EmoController {
 	private static final  String MESSAGE_ERROR_400 = "No envío el parametro:";
 	private static final  String MESSAGE_ERROR_500 = "Error interno servidor";
 
+	@Autowired
+	private DocumentoEmoFacade documentoFacade;
 
+
+	@CrossOrigin("*")
+	@PostMapping("/updload")
+	public ReporteResponse updload(@RequestParam("files") MultipartFile[] files) {
+		System.out.println("Estamos en el subir documento....------///ZZZZZ>>>>>>>>>>>>>>>>>>>>>" + files.length);
+		return documentoFacade.updload(files);
+	}
 
 	@Autowired
 	private EmoDAO emoDAO;
@@ -51,6 +65,13 @@ public class EmoController {
 	public List<BDTablesDTO> getAllTables() throws Exception {
 		return emoDAO.getAllTables();
 	}
+	
+	@CrossOrigin("*")
+	@GetMapping("/get/{uuid}")
+	public ReporteResponse get(@PathVariable String uuid) {
+		return documentoFacade.get(uuid);
+	}
+
 	@CrossOrigin("*")
 	@PostMapping("/consulta")
 	public ResponseGenericDTO registrar(@RequestBody EmoDTORequest emoDTORequest) throws Exception {
