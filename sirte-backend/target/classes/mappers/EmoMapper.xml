@@ -33,14 +33,13 @@
 		
 	</resultMap>
 	<resultMap
-		type="pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse"
+		type="pe.gob.oefa.sirte.dto.EmoDocumentDTORequest"
 		id="emoConsultaResultMap">
 		<id column="ID" property="id" />
 		<result column="CODIGO_EXAMEN" property="codigoExamen" />
 		<result column="NOMBRE_EXAMEN" property="nombreExamen" />
 		<result column="NOMBRE_ARCHIVO" property="nombreArchivo" />
 		<result column="PATH_ARCHIVO" property="pathExamen" />
-		<result column="APTITUD_MEDICO" property="aptitudMedico" />
 		<result column="HABILITADO" property="habilitado" />
 		<result column="FECHA_CREACION" property="fechaCreacion" />
 		<result column="USUARIO_CREACION" property="usuarioCreacion" />
@@ -94,7 +93,34 @@
 		#{usuarioCreacion,jdbcType=VARCHAR},
 		CURRENT_TIMESTAMP)
 	</insert>
-
+<insert id="saveEmoDocumento"
+	useGeneratedKeys="true"
+		parameterType="pe.gob.oefa.sirte.dto.EmoDocumentDTORequest">
+		<selectKey order="BEFORE" keyProperty="id"
+			resultType="java.lang.Integer">
+			SELECT SGCORESYS.SEQ_EMO_EXAMENES.nextVal from dual
+		</selectKey>
+			INSERT INTO SGCORESYS.EMO_CONSULTA_EXAMENES(
+		ID, 
+		CODIGO_EXAMEN,
+		NOMBRE_EXAMEN,
+		NOMBRE_ARCHIVO,
+		PATH_EXAMEN,
+		HABILITADO,
+		ID_EMO_CONSULTA,
+		USUARIO_CREACION ,
+		FECHA_CREACION)
+		VALUES(
+		#{id,jdbcType=NUMERIC},
+		#{codigoExamen,jdbcType=VARCHAR},
+		#{nombreExamen,jdbcType=VARCHAR},
+		#{nombreArchivo,jdbcType=VARCHAR},
+		#{pathExamen,jdbcType=VARCHAR},
+		#{habilitado,jdbcType=NUMERIC},
+		#{idEmoConsulta,jdbcType=NUMERIC},
+		#{usuarioCreacion,jdbcType=VARCHAR},
+		CURRENT_TIMESTAMP)
+	</insert>
 	<update id="updateEmo"
 		parameterType="pe.gob.oefa.sirte.dto.EmoDTORequest">
 		UPDATE SGCORESYS. SGCORESYS.EMO_CONSULTA

@@ -4,24 +4,32 @@ import java.time.LocalDateTime;
 
 public class EmoDocumentDTORequest {
 	private Integer id;
-	private Integer codigoExamen;
+	private String codigoExamen;
 	private String nombreExamen;
+	private String nombreArchivo;
+
 	private String pathExamen;
-	private Integer aptitudMedico;
 	private Integer habilitado;
 	private Integer idEmoConsulta;
 	private String usuarioCreacion;
 	private LocalDateTime fechaCreacion;
+	
+	public String getNombreArchivo() {
+		return nombreArchivo;
+	}
+	public void setNombreArchivo(String nombreArchivo) {
+		this.nombreArchivo = nombreArchivo;
+	}
 	public Integer getId() {
 		return id;
 	}
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Integer getCodigoExamen() {
+	public String getCodigoExamen() {
 		return codigoExamen;
 	}
-	public void setCodigoExamen(Integer codigoExamen) {
+	public void setCodigoExamen(String codigoExamen) {
 		this.codigoExamen = codigoExamen;
 	}
 	public String getNombreExamen() {
@@ -36,12 +44,7 @@ public class EmoDocumentDTORequest {
 	public void setPathExamen(String pathExamen) {
 		this.pathExamen = pathExamen;
 	}
-	public Integer getAptitudMedico() {
-		return aptitudMedico;
-	}
-	public void setAptitudMedico(Integer aptitudMedico) {
-		this.aptitudMedico = aptitudMedico;
-	}
+	
 	public Integer getHabilitado() {
 		return habilitado;
 	}

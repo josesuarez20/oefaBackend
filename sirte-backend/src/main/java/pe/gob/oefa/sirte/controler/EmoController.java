@@ -25,6 +25,7 @@ import pe.gob.oefa.sirte.dao.UserDAO;
 import pe.gob.oefa.sirte.dto.BDTablesDTO;
 import pe.gob.oefa.sirte.dto.EmoDTORequest;
 import pe.gob.oefa.sirte.dto.EmoDTOResponse;
+import pe.gob.oefa.sirte.dto.EmoDocumentDTORequest;
 import pe.gob.oefa.sirte.dto.EmoDocumentDTOResponse;
 import pe.gob.oefa.sirte.dto.EmoMatrizDTORequest;
 import pe.gob.oefa.sirte.dto.EmoMatrizDTOResponse;
@@ -45,17 +46,56 @@ public class EmoController {
 	@Autowired
 	private DocumentoEmoFacade documentoFacade;
 
-
-	@CrossOrigin("*")
-	@PostMapping("/updload")
-	public ReporteResponse updload(@RequestParam("files") MultipartFile[] files, @RequestParam("idEmo") Integer idEmo) {
-		System.out.println("Estamos en el subir documento....------///ZZZZZ>>>>>>>>>>>>>>>>>>>>>" + files.length);
-		return documentoFacade.updload(files);
-	}
-
 	@Autowired
 	private EmoDAO emoDAO;
 
+
+	@CrossOrigin("*")
+	@PostMapping("/updload")
+	public ResponseGenericDTO updload(
+			@RequestParam("files") MultipartFile[] files, 
+			@RequestParam("idEmoConsulta") Integer idEmoConsulta,
+			@RequestParam("usuarioCreacion") String usuarioCreacion,
+			@RequestParam("habilitado") Integer habilitado,
+			@RequestParam("nombreExamen") String nombreExamen
+
+			) {
+		ResponseGenericDTO response = new ResponseGenericDTO();
+		try {
+			ReporteResponse responseDocumento =  documentoFacade.updload(files);
+			EmoDocumentDTORequest request = new EmoDocumentDTORequest();
+			request.setCodigoExamen(responseDocumento.getMensaje());
+			request.setNombreArchivo(responseDocumento.getNombreArchivo());
+			request.setHabilitado(habilitado);
+			request.setUsuarioCreacion(usuarioCreacion);
+			request.setIdEmoConsulta(idEmoConsulta);
+			request.setPathExamen(responseDocumento.getExtension());
+			request.setNombreExamen(nombreExamen);
+			
+			response.setSuccess(emoDAO.saveEmoDocumento(request) == 1? true : false);
+			response.setCode(201);
+			response.setMessage(MESSAGE_CREATE);
+			
+		} catch (Exception e) {
+			response.setSuccess(false);
+			response.setCode(500);
+			response.setMessage(e.getMessage());
+		}
+		System.out.println("Estamos en el subir documento....------///ZZZZZ>>>>>>>>>>>>>>>>>>>>>" + files.length);
+		return response;
+		
+	}
+
+	@CrossOrigin("*")
+	@PostMapping("/updloasd")
+	public ReporteResponse updload(
+			@RequestParam("files") MultipartFile[] files
+			
+
+			) {
+				return documentoFacade.updload(files);
+		
+	}
 	@CrossOrigin("*")
 	@GetMapping("/consulta")
 	public List<EmoDTOResponse> getAll() throws Exception {
