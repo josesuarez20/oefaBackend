@@ -64,7 +64,7 @@ public class EmoController {
 		try {
 			ReporteResponse responseDocumento =  documentoFacade.updload(files);
 			EmoDocumentDTORequest request = new EmoDocumentDTORequest();
-			request.setCodigoExamen(responseDocumento.getMensaje());
+			request.setCodigoExamen(responseDocumento.getNombre());
 			request.setNombreArchivo(responseDocumento.getNombreArchivo());
 			request.setHabilitado(habilitado);
 			request.setUsuarioCreacion(usuarioCreacion);
@@ -74,7 +74,7 @@ public class EmoController {
 			
 			response.setSuccess(emoDAO.saveEmoDocumento(request) == 1? true : false);
 			response.setCode(201);
-			response.setMessage(MESSAGE_CREATE);
+			response.setMessage(responseDocumento.getNombre());
 			
 		} catch (Exception e) {
 			response.setSuccess(false);
@@ -149,6 +149,19 @@ public class EmoController {
 	}
 
 	@CrossOrigin("*")
+	@GetMapping("/documentos/{idEmoConsulta}")
+	public List<EmoDocumentDTORequest> getEmoDni(@PathVariable Integer idEmoConsulta)
+	throws Exception {
+		
+		Map<String, Integer> map = new HashMap<>();
+		
+		map.put("idEmoConsulta", idEmoConsulta);
+		
+		List<EmoDocumentDTORequest> emoExamenes = emoDAO.getAllEmoExamenes(map);
+		return emoExamenes;
+	}
+	
+	@CrossOrigin("*")
 	@GetMapping("/consulta/{dni}")
 	public List<EmoDocumentDTOResponse> getEmoDni(@PathVariable String dni)
 	throws Exception {
@@ -163,6 +176,7 @@ public class EmoController {
 		List<EmoDocumentDTOResponse> emoExamenes = emoDAO.EmoExamenesById(map_);
 		return emoExamenes;
 	}
+	
 	/**
 	 * 
 	 * */

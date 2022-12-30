@@ -56,7 +56,7 @@
 
 	</select>
 	<select id="getAllEmoExamenes" resultMap="emoConsultaResultMap">
-		select * from sgcoresys.EMO_CONSULTA e			
+		select * from sgcoresys.EMO_CONSULTA_EXAMENES e			
 		where e.ID_EMO_CONSULTA = #{idEmoConsulta}
 	</select>
 	<insert id="saveEmo"

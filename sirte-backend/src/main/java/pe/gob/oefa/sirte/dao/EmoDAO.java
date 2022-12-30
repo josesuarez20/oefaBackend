@@ -16,7 +16,7 @@ public interface EmoDAO {
 	List<BDTablesDTO> getAllTables() throws Exception;
 	List<EmoDTOResponse> emoConsultaByDni(Map<String, Object> map) throws Exception;
 	List<EmoDocumentDTOResponse> EmoExamenesById(Map<String, Object> map) throws Exception;
-	List<EmoDocumentDTORequest> getAllEmoExamenes(Map<Integer, Object> map) throws Exception;
+	List<EmoDocumentDTORequest> getAllEmoExamenes(Map<String, Integer> map) throws Exception;
 	Integer saveEmo(EmoDTORequest emoDTORequest);
 	Integer updateEmo(EmoDTORequest emoDTORequest);
 	
