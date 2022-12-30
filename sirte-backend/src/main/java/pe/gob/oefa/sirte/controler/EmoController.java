@@ -48,7 +48,7 @@ public class EmoController {
 
 	@CrossOrigin("*")
 	@PostMapping("/updload")
-	public ReporteResponse updload(@RequestParam("files") MultipartFile[] files) {
+	public ReporteResponse updload(@RequestParam("files") MultipartFile[] files, @RequestParam("idEmo") Integer idEmo) {
 		System.out.println("Estamos en el subir documento....------///ZZZZZ>>>>>>>>>>>>>>>>>>>>>" + files.length);
 		return documentoFacade.updload(files);
 	}

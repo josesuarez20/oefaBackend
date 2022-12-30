@@ -15,13 +15,14 @@ import pe.gob.oefa.model.json.DocumentoDataGridResponse;
 import pe.gob.oefa.model.json.ReporteResponse;
 import pe.gob.oefa.sirte.dto.DocumentoDTO;
 import pe.gob.oefa.sirte.dto.DocumentoDataGridDTO;
+import pe.gob.oefa.sirte.facade.DocumentoEmoFacade;
 import pe.gob.oefa.sirte.facade.DocumentoFacade;
 import pe.gob.oefa.sirte.service.DocumentoService;
 import pe.gob.oefa.util.Constantes;
 import pe.gob.oefa.util.GenericUtil;
 
 @Component("documentoEmoFacade")
-public class DocumentoEmoFacadeImpl extends FacadeBase implements DocumentoFacade {
+public class DocumentoEmoFacadeImpl extends FacadeBase implements DocumentoEmoFacade {
 	private CoreLogger logger = LoggerFactory.getLogger(DocumentoEmoFacadeImpl.class);
 	@Autowired
 	private DocumentoService documentoService;
