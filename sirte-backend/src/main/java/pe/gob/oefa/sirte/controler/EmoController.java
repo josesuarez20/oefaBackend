@@ -105,7 +105,15 @@ public class EmoController {
 			Map<String, Object> map = new HashMap<>();
 			map.put("dni", emos.get(i).getDni());
 			UserDTO ListuserDTO = userDAO.listarUsuariosByDni(map).get(0);
+			Map<String, Integer> map2 = new HashMap<>();
+			
+			map.put("idEmoConsulta", emos.get(i).getId());
+			
+			List<EmoDocumentDTORequest> emoExamenes = emoDAO.getAllEmoExamenes(map2);
+			
 			emos.get(i).setUser(ListuserDTO);
+			emos.get(i).setDocumentos(emoExamenes);
+
 		}
 
 		return emos;

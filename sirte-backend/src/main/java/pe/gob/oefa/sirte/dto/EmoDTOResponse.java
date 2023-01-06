@@ -2,6 +2,7 @@ package pe.gob.oefa.sirte.dto;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 import pe.gob.oefa.dto.core.UserDTO;
 
@@ -19,7 +20,14 @@ public class EmoDTOResponse {
 	private LocalDateTime fechaCreacion;
 	private String usuarioCreacion;
 	private UserDTO user;
+	private List<EmoDocumentDTORequest> documentos;
 	
+	public List<EmoDocumentDTORequest> getDocumentos() {
+		return documentos;
+	}
+	public void setDocumentos(List<EmoDocumentDTORequest> documentos) {
+		this.documentos = documentos;
+	}
 	public UserDTO getUser() {
 		return user;
 	}
