@@ -116,10 +116,16 @@ public class EmoController {
 	@PostMapping("/consulta")
 	public ResponseGenericDTO registrar(@RequestBody EmoDTORequest emoDTORequest) throws Exception {
 		ResponseGenericDTO response = new ResponseGenericDTO();
+		
+		
 		try {
-			response.setSuccess(emoDAO.saveEmo(emoDTORequest) == 1 ? true : false);
-			response.setCode(201);
-			response.setMessage(MESSAGE_CREATE);
+			Integer respuesta = emoDAO.saveEmo(emoDTORequest);
+			if(respuesta == 1) {
+				List<EmoDTOResponse> lista = emoDAO.getAllEmo();;
+				response.setSuccess(true);
+				response.setCode(201);
+				response.setMessage(lista.get(lista.size()-1).getId().toString());
+			}
 			
 		} catch (Exception e) {
 			response.setSuccess(false);
