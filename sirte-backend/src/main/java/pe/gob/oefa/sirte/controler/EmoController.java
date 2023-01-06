@@ -48,7 +48,8 @@ public class EmoController {
 
 	@Autowired
 	private EmoDAO emoDAO;
-
+	@Autowired
+	private UserDAO userDAO;
 
 	@CrossOrigin("*")
 	@PostMapping("/updload")
@@ -99,10 +100,19 @@ public class EmoController {
 	@CrossOrigin("*")
 	@GetMapping("/consulta")
 	public List<EmoDTOResponse> getAll() throws Exception {
-		return emoDAO.getAllEmo();
+		List<EmoDTOResponse> emos = emoDAO.getAllEmo();
+		for (int i = 0; i < emos.size(); i++) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("dni", emos.get(i).getDni());
+			UserDTO ListuserDTO = userDAO.listarUsuariosByDni(map).get(0);
+			emos.get(i).setUser(ListuserDTO);
+		}
+
+		return emos;
 	}
 	@GetMapping("/tables")
 	public List<BDTablesDTO> getAllTables() throws Exception {
+		
 		return emoDAO.getAllTables();
 	}
 	

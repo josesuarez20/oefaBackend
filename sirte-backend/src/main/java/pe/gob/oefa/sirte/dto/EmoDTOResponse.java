@@ -3,6 +3,8 @@ package pe.gob.oefa.sirte.dto;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import pe.gob.oefa.dto.core.UserDTO;
+
 public class EmoDTOResponse {
 	private Integer id;
 	private String dni;
@@ -16,6 +18,14 @@ public class EmoDTOResponse {
 	private String restricciones;
 	private LocalDateTime fechaCreacion;
 	private String usuarioCreacion;
+	private UserDTO user;
+	
+	public UserDTO getUser() {
+		return user;
+	}
+	public void setUser(UserDTO user) {
+		this.user = user;
+	}
 	public Integer getId() {
 		return id;
 	}
