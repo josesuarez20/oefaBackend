@@ -13,6 +13,7 @@ import pe.gob.oefa.sirte.dto.EmoMatrizDTOResponse;
 
 public interface EmoDAO {
 	List<EmoDTOResponse> getAllEmo() throws Exception;
+	List<EmoDTOResponse> getOneEmo(Map<String, Object> map) throws Exception;
 	List<BDTablesDTO> getAllTables() throws Exception;
 	List<EmoDTOResponse> emoConsultaByDni(Map<String, Object> map) throws Exception;
 	List<EmoDocumentDTOResponse> EmoExamenesById(Map<String, Object> map) throws Exception;
