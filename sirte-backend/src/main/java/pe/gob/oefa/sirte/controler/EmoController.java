@@ -125,7 +125,7 @@ public class EmoController {
 		Map<String, Object> map_ = new HashMap<>();
 		map_.put("dni", dni);
 		List<EmoDTOResponse> emos = emoDAO.getOneEmo(map_);
-		
+		 
 		for (int i = 0; i < emos.size(); i++) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("dni", emos.get(i).getDni());
