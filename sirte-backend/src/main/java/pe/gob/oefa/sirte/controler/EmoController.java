@@ -121,19 +121,25 @@ public class EmoController {
 	
 	@CrossOrigin("*")
 	@GetMapping("/consulta/user/{dni}")
-	public EmoDTOResponse getOneEmo(@PathVariable String dni) throws Exception {
+	public List<EmoDTOResponse> getOneEmo(@PathVariable String dni) throws Exception {
 		Map<String, Object> map_ = new HashMap<>();
 		map_.put("dni", dni);
-		EmoDTOResponse emos = emoDAO.getOneEmo(map_).get(0);
+		List<EmoDTOResponse> emos = emoDAO.getOneEmo(map_);
 		
-		UserDTO ListuserDTO = userDAO.listarUsuariosByDni(map_).get(0);
-		Map<String, Integer> map2 = new HashMap<>();
-		
-		map2.put("idEmoConsulta", emos.getId());
-		List<EmoDocumentDTORequest> emoExamenes = emoDAO.getAllEmoExamenes(map2);
-		
-		emos.setUser(ListuserDTO);
-		emos.setDocumentos(emoExamenes);
+		for (int i = 0; i < emos.size(); i++) {
+			Map<String, Object> map = new HashMap<>();
+			map.put("dni", emos.get(i).getDni());
+			UserDTO ListuserDTO = userDAO.listarUsuariosByDni(map).get(0);
+			Map<String, Integer> map2 = new HashMap<>();
+			
+			map2.put("idEmoConsulta", emos.get(i).getId());
+			
+			List<EmoDocumentDTORequest> emoExamenes = emoDAO.getAllEmoExamenes(map2);
+			
+			emos.get(i).setUser(ListuserDTO);
+			emos.get(i).setDocumentos(emoExamenes);
+
+		}
 
 		return emos;
 	}
