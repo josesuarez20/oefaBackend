@@ -48,7 +48,7 @@
 	</resultMap>
 	
 	<select id="getAllEmo" resultMap="emoResultMap">
-		select p.*  from sgcoresys.EMO_CONSULTA p
+		select p.*  from sgcoresys.EMO_CONSULTA p order by id ASC
 	</select>
 	
 	<select id="getOneEmo" resultMap="emoResultMap">
@@ -61,7 +61,7 @@
 	</select>
 	<select id="getAllEmoExamenes" resultMap="emoConsultaResultMap">
 		select * from sgcoresys.EMO_CONSULTA_EXAMENES e			
-		where e.ID_EMO_CONSULTA = #{idEmoConsulta}
+		where e.ID_EMO_CONSULTA = #{idEmoConsulta} ORDER BY id ASC
 	</select>
 	<insert id="saveEmo"
 	useGeneratedKeys="true"
