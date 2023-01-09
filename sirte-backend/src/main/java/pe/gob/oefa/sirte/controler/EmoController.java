@@ -1,11 +1,13 @@
 package pe.gob.oefa.sirte.controler;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import pe.gob.oefa.dto.core.UserDTO;
 import pe.gob.oefa.model.json.ReporteResponse;
+import pe.gob.oefa.seguridad.util.UtilEncrypt;
 import pe.gob.oefa.sirte.dao.EmoDAO;
 import pe.gob.oefa.sirte.dao.UserDAO;
 import pe.gob.oefa.sirte.dto.BDTablesDTO;
@@ -42,6 +45,9 @@ public class EmoController {
 	private static final  String MESSAGE_ERROR_404 = "Registro no encontrado";
 	private static final  String MESSAGE_ERROR_400 = "No envío el parametro:";
 	private static final  String MESSAGE_ERROR_500 = "Error interno servidor";
+	
+	@Value("${encrypt.key}")
+	private String key;
 
 	@Autowired
 	private DocumentoEmoFacade documentoFacade;
@@ -120,28 +126,32 @@ public class EmoController {
 	}
 	
 	@CrossOrigin("*")
-	@GetMapping("/consulta/user/{dni}")
-	public List<EmoDTOResponse> getOneEmo(@PathVariable String dni) throws Exception {
-		Map<String, Object> map_ = new HashMap<>();
-		map_.put("dni", dni);
-		List<EmoDTOResponse> emos = emoDAO.getOneEmo(map_);
-		 
+	@PostMapping("/consulta/user")
+	public List<EmoDTOResponse> getOneEmo(@RequestParam String user) throws Exception {
+		UtilEncrypt.init(key);
+		String documento = UtilEncrypt.decrypt(user);	
+		List<EmoDTOResponse> emos = emoDAO.getAllEmo();
+		
 		for (int i = 0; i < emos.size(); i++) {
 			Map<String, Object> map = new HashMap<>();
 			map.put("dni", emos.get(i).getDni());
 			UserDTO ListuserDTO = userDAO.listarUsuariosByDni(map).get(0);
 			Map<String, Integer> map2 = new HashMap<>();
-			
 			map2.put("idEmoConsulta", emos.get(i).getId());
-			
 			List<EmoDocumentDTORequest> emoExamenes = emoDAO.getAllEmoExamenes(map2);
-			
 			emos.get(i).setUser(ListuserDTO);
 			emos.get(i).setDocumentos(emoExamenes);
 
 		}
-
-		return emos;
+		
+		List<EmoDTOResponse> emos_ = new ArrayList<>();
+		for (int i = 0; i < emos.size(); i++) {
+			if(emos.get(i).getUser().getCodigousuario().equalsIgnoreCase(documento)) {
+				emos_.add(emos.get(i));
+			}
+		}
+		
+		return emos_;
 	}
 	
 	@GetMapping("/tables")
