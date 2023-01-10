@@ -51,6 +51,10 @@
 		select p.*  from sgcoresys.EMO_CONSULTA p order by id ASC
 	</select>
 	
+	<select id="getOneEmo" resultMap="emoResultMap">
+		select p.*  from sgcoresys.EMO_CONSULTA p WHERE p.DNI = #{dni} 
+	</select>
+	
 	<select id="getAllTables" resultMap="tablesResultMap">
 		select table_name from user_tables order by table_name
 
