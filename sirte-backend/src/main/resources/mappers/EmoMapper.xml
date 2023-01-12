@@ -127,32 +127,17 @@
 	</insert>
 	<update id="updateEmo"
 		parameterType="pe.gob.oefa.sirte.dto.EmoDTORequest">
-		UPDATE SGCORESYS. SGCORESYS.EMO_CONSULTA
-		
-		DNI,
-		FECHA_REGISTRO_EXAMEN,
-		SEDE,
-		APTITUD_MEDICO,
-		TIPO_EMO,
-		ANEXO,
-		INTERCONSULTA ,
-		RECOMENDACIONES,
-		RESTRICCIONES,
-		USUARIO_CREACION,
-		FECHA_CREACION
-		
+		UPDATE SGCORESYS.EMO_CONSULTA	
 		SET
-		FECHA_REGISTRO_EXAMEN=#{fechaRegistro,jdbcType=DATE},
 		SEDE=#{sede,jdbcType=VARCHAR},
+		FECHA_REGISTRO_EXAMEN=#{fechaRegistro},
 		APTITUD_MEDICO=#{aptitudMedico,jdbcType=NUMERIC},
 		TIPO_EMO=#{tipoEmo,jdbcType=NUMERIC},
 		ANEXO=#{anexo,jdbcType=NUMERIC},
 		INTERCONSULTA=#{interconsulta,jdbcType=NUMERIC},
 		RECOMENDACIONES=#{recomendaciones,jdbcType=VARCHAR},
-		RESTRICCIONES=#{restricciones,jdbcType=VARCHAR},
-		 WHERE
-		ID
-		=#{id,jdbcType=NUMERIC}
+		RESTRICCIONES=#{restricciones,jdbcType=VARCHAR}
+		 WHERE ID=#{id,jdbcType=NUMERIC}
 	</update>
 	
 	<select id="emoConsultaByDni" resultMap="emoResultMap">
